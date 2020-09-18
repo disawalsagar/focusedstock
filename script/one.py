@@ -5,7 +5,7 @@ import pandas as pd
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-pd1 = pd.read_csv(r'..\data\rbh.csv')
+pd1 = pd.read_csv('rbh.csv')
 
 pd2 = pd1['Symbol']
 # iterate over all the elements
