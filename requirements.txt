@@ -56,11 +56,5 @@ testpath==0.4.4
 toolz==0.10.0
 tornado==6.0.4
 trading-calendars==1.11.11
-traitlets==5.0.4
-urllib3==1.25.10
-wcwidth==0.2.5
-webencodings==0.5.1
-widgetsnbextension==3.5.1
-wincertstore==0.2
 yfinance==0.1.54
 zipp==3.1.0
