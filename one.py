@@ -22,7 +22,7 @@ for counter, item in pd2.iteritems():
 
 message = MIMEMultipart()
 message["Subject"] = "Daily Stock Update"
-message["From"] = 'sagardisa8@gmail.com'
+message["From"] = 'disawalsagar@gmail.com'
 message["To"] = 'sagardisa8@gmail.com'
 
 html = """\

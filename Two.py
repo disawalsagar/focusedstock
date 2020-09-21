@@ -56,12 +56,7 @@ df_cf_intr = lat_dts(df_cf_1)
 df_bal_1 = df_bal[["symbol","date","totalDebt","totalCurrentAssets", "propertyPlantEquipmentNet", "totalCurrentLiabilities", "longTermDebt", "totalStockholdersEquity","cashAndShortTermInvestments"]].copy()
 df_bal_intr = lat_dts(df_bal_1)
 
-#%%
 
-#df_inc_sorted["EBIT"] = df_inc_sorted["ebitda"] - df_inc_sorted["depreciationAndAmortization"]
-#f_df["_EV"] = df_bal_sorted["totalDebt"].fillna(0) - df_bal_sorted["cashAndShortTermInvestments"].fillna(0)
-
-#
 ######################## Magic Formula Calcluation ############################
 #%%
 
