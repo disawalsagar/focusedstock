@@ -11,11 +11,14 @@ sys.path.append(r'C:\Users\sdisawal\Desktop\Stocks\Code')
 sys.path.append(r'C:\Users\sdisawal\PycharmProjects\LearnApi\alpha_vantage')
 #print(sys.path)
 
+
 #%% Import Statements
 import secrets_key as sk
 from alpha_vantage.fundamentaldata  import FundamentalData 
 import pandas as pd
 import time
+from functools import reduce
+import numpy as np
 
 #%% Generate api key
 api_key = sk.fmp_api_key()
@@ -96,7 +99,7 @@ df_qte = pd.read_csv(r'C:\Users\sdisawal\Desktop\Stocks\Code\csv\qte.csv')
 df_inc_1 = df_inc[["Ticker","ebit", "netIncome","fiscalDateEnding"]]
 df_inc_intr = lat_dts(df_inc_1)
 df_qte_intr = df_qte[["MarketCapitalization", "Ticker"]]
-df_bal_1 = df_bal[["Ticker","totalCurrentAssets","totalCurrentLiabilities", "totalLiabilities","fiscalDateEnding"]]
+df_bal_1 = df_bal[["Ticker","propertyPlantEquipment","totalCurrentAssets","totalCurrentLiabilities", "totalLiabilities","fiscalDateEnding"]]
 df_bal_intr = lat_dts(df_bal_1)
 df_cf_1 = df_cf[["Ticker","operatingCashflow", "capitalExpenditures","fiscalDateEnding"]]
 df_cf_intr = lat_dts(df_cf_1)
@@ -106,14 +109,21 @@ df_cf_intr = lat_dts(df_cf_1)
 ######################## Magic Formula Calculation ############################
 #%%
 
-dfs= [df_inc_intr, df_cf_intr,df_bal_intr, df_qte_intr]
+dfs = [df_inc_intr, df_cf_intr,df_bal_intr, df_qte_intr]
 df_f = reduce(lambda left,right: pd.merge(left,right,on=['Ticker']), dfs)
-df_f = df_f.fillna(0)
-df_f["EBIT"] = df_f["ebitda"] - df_f["depreciationAndAmortization"]
-df_f["EnterpriseValue"] = df_f["marketCap"] + df_f["totalLiabilities"] - (df_f["totalCurrentAssets"]-df_f["totalCurrentLiabilities"])
-df_f["EarningYield"] = df_f["EBIT"]/df_f["EnterpriseValue"]
-df_f["FCFYield"] = (df_f["operatingCashflow"] - df_f["capitalExpenditures"])/df_f["marketCap"]
-df_f["ROC"]  = df_f["EBIT"]/(df_f["propertyPlantEquipmentNet"]+ df_f["totalCurrentAssets"]-df_f["totalCurrentLiabilities"])
+#In order to first replace with string None in the dataframe, converted "None" to Nan and then used 
+#fillna to convert nan with o.
+df_f = df_f.replace('None', np.nan).fillna(0)
+#print(df_f.head())
+#df_C = df_f["ebit"].replace('None', np.nan).fillna(0)
+int_cols=["ebit", "netIncome","MarketCapitalization","propertyPlantEquipment","totalCurrentAssets","totalCurrentLiabilities", "totalLiabilities","operatingCashflow", "capitalExpenditures"]
+#While reading CSV by default thedefault type for certain column came to Object type which gave error in doing calculations.Also, int too small to handle int value s
+df_f[int_cols] = df_f[int_cols].astype(str).astype(np.int64)
+#print(df_f.dtypes)
+df_f["EnterpriseValue"] = df_f["MarketCapitalization"] + df_f["totalLiabilities"]- (df_f["totalCurrentAssets"]-df_f["totalCurrentLiabilities"])
+df_f["EarningYield"] = df_f["ebit"]/df_f["EnterpriseValue"]
+df_f["FCFYield"] = (df_f["operatingCashflow"] - df_f["capitalExpenditures"])/df_f["MarketCapitalization"]
+df_f["ROC"]  = df_f["ebit"]/(df_f["propertyPlantEquipment"]+ df_f["totalCurrentAssets"]-df_f["totalCurrentLiabilities"])
 
 
 #%%
