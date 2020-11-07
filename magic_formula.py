@@ -14,7 +14,7 @@ sys.path.append(r'C:\Users\sdisawal\PycharmProjects\LearnApi\alpha_vantage')
 
 #%% Import Statements
 import secrets_key as sk
-from alpha_vantage.fundamentaldata  import FundamentalData 
+#from alpha_vantage.fundamentaldata  import FundamentalData 
 import pandas as pd
 import time
 from functools import reduce
@@ -130,7 +130,7 @@ df_f["ROC"]  = df_f["ebit"]/(df_f["propertyPlantEquipment"]+ df_f["totalCurrentA
 df_f["CombRank"] = df_f["EarningYield"].rank(ascending=False,na_option='bottom')+ df_f["ROC"].rank(ascending=False,na_option='bottom')
 df_f["MagicRank"] = df_f["CombRank"].rank(method='first')
 
-df_final = df_f[["name", "symbol", "MagicRank"]].sort_values("MagicRank").reset_index(drop=True)
+df_final = df_f[["Ticker", "MagicRank"]].sort_values("MagicRank").reset_index(drop=True)
 
 #%%
 df_final.to_csv(r'C:\Users\sdisawal\Desktop\Stocks\Code\csv\temp.csv', header=True, index=False)
