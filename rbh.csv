@@ -1,19 +1,17 @@
-No,Stocks,Symbol,Sector,Type of stock,Quantity,Bought Price,Total,Current Price,Total,Return,Return_P,WHY?,GDP
-4,Occidental Petroleum,OXY,,Growth,2,58,116,12,24,-92,-79%,,
-2,Canopy Growth,CGX,,Growth,10,37,370,16,160,-210,-57%,,
-1,Boeing,BA,,Turnaround,2,352,704,171,342,-362,-51%,,2.5
-3,Delta,DAL,,Turnaround,31,37,1147,31,961,-186,-16%,,
-5,Duke,DUK,,Dividend,5,95,475,81,405,-70,-15%,,
-6,Fedex,FDX,,Dividend,2,243,486,227,454,-32,-7%,,
-7,Livongo,LVGO,,Growth,4,134,536,126,504,-32,-6%,,
-8,CVS,CVS,,Dividend,2,57,114,60,120,6,5%,,
-10,Verizon,VZ,,Dividend,10,55,550,60,600,50,9%,,
-9,3M,MMM,,Dividend,2,146,292,167,334,42,14%,,
-12,TD Ameritade,AMTD,,Growth,20,34,680,39,780,100,15%,,
-17,Disney,DIS,,Growth,10,103,1030,132,1320,290,28%,,
-14,Netflix,NFLX,,Growth,1,397,397,1,512,115,29%,,
-11,Alibaba,BABA,,Growth,1,208,208,280,280,72,35%,,
-15,Nike,NKE,,Dividend,3,77,231,118,354,123,53%,,
-13,Facebook,FB,,Growth,1,178,178,284,284,106,60%,,
-16,Apple,AAPL,,Growth,4,57,228,120,480,252,111%,,
-
+Stocks,Symbol,Sector,Type of stock,Quantity,Bought Price,Current Price,Return,Return_P,WHY?,GDP,Date
+Occidental Petroleum,OXY,,Growth,2,58,12,-92,-79%,,,2019-05-01
+Canopy Growth,CGX,,Growth,1,26.03,16,-210,-57%,,,2018-08-06
+Canopy Growth,CGX,,Growth,4,25,16,-210,-57%,,,2018-07-30
+Canopy Growth,CGX,,Growth,5,42.03,16,-210,-57%,,,2018-08-23
+TD Ameritade,AMTD,,Growth,21,37.09,39,100,15%,,,2020-10-06
+Disney,DIS,,Growth,5,99.99,132,290,28%,,,2020-04-09
+Disney,DIS,,Growth,5,106.22,132,290,28%,,,2018-07-22
+Nike,NKE,,Dividend,3,77,118,123,53%,,,2018-07-17
+Boeing,BA,,Turnaround,1,357.06,,,,,,2018-07-17
+Boeing,BA,,Turnaround,1,348.3,,,,,,2018-08-08
+Delta,DAL,,Turnaround,10,45,,,,,,2020-03-03
+Delta,DAL,,Turnaround,10,44.47,,,,,,2020-03-09
+Delta,DAL,,Turnaround,1,32.85,,,,,,2020-03-17
+Delta,DAL,,Turnaround,10,22.78,,,,,,2020-04-26
+Delta,DAL,,Turnaround,2,31.82,,,,,,2020-10-05
+Teladoc,TDOC,,Growth,7.7,221,,,,,,2020-10-12
