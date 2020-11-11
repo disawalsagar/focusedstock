@@ -30,7 +30,7 @@ ts = TimeSeries(key=api_key, output_format='pandas')
 
 #%% 
 p_df = pd.read_csv(r'C:\Users\sdisawal\python_projects\focusedstock\rbh.csv', index_col='Symbol')
-del p_df["No"]
+#del p_df["No"]
  
 #%%
 snp = ts.get_daily('VOO', outputsize='full')
@@ -45,6 +45,37 @@ p_df = pd.read_csv(r'C:\Users\sdisawal\python_projects\focusedstock\rbh.csv')
 
 dt_fltr = p_df.loc[:,'Date']
 v_date = snp[snp['date'].isin(dt_fltr)][['date','4. close']].reset_index(drop=True)
+v_date.rename(columns= {'4. close' : 'close'},inplace = True)
+v_date['Ticker'] = 'VOO'
+#%% Today's return of all stocks
+
+tickers = set((p_df["Symbol"]).to_list())
+tickers.add('VOO')
+t_df = pd.DataFrame()
+i = 1
+for ticker in tickers:
+        print("Getting values for {}, {}".format(i, ticker))
+        if i == 5:
+            time.sleep(60) 
+            i = 0
+        data, metadata = ts.get_daily(symbol=ticker, outputsize='full')
+        data['Ticker'] = ticker
+        t_df = t_df.append(data)
+        i= i+1
+
+#%%
+t_df.rename(columns= {'4. close' : 'close'},inplace = True)
+#%%
+t_df.reset_index().to_csv(r'C:\Users\sdisawal\Desktop\Stocks\Code\csv\stock_Values.csv', header=True, index=False)
+
+#%%
+t_df = pd.read_csv(r'C:\Users\sdisawal\Desktop\Stocks\Code\csv\stock_Values.csv')
+
+#%%
+print(p_df.columns)
+p_df = p_df[['Stocks', 'Symbol', 'Quantity','Bought Price','Date']]
+p_df.merge[t_df]
+
 
 
 
