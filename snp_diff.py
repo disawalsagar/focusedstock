@@ -70,11 +70,29 @@ t_df.reset_index().to_csv(r'C:\Users\sdisawal\Desktop\Stocks\Code\csv\stock_Valu
 
 #%%
 t_df = pd.read_csv(r'C:\Users\sdisawal\Desktop\Stocks\Code\csv\stock_Values.csv')
+t_df = t_df.rename(columns= {'4. close' : 'close'}).reset_index(drop=True)
 
 #%%
 print(p_df.columns)
 p_df = p_df[['Stocks', 'Symbol', 'Quantity','Bought Price','Date']]
-p_df.merge[t_df]
+#t_df = t_df[t_df['Ticker'] == 'VOO'][['Ticker','date','close']]
+df_merge1 = p_df.merge(t_df, left_on = ['Date'], right_on=['date'], how='left')
+#df_merge1.rename(columns= {'Date' : 'Date_stock', },inplace = True)
+df_merge1 = df_merge1.drop('date', axis=1)
+
+#%%
+def lat_dts(df):
+    df_1 = df.groupby(by=["Ticker"], as_index=False).apply(lambda x: x.sort_values(["date"], ascending = False)).reset_index(drop=True)
+    df_srtd = df_1.groupby('Ticker').head(1).reset_index(drop=True)
+    return df_srtd
+#%%
+t_df_srtd = lat_dts(t_df)
+
+#%%
+df_merge = df_merge1.merge(t_df_srtd, left_on = ['Symbol'], right_on=['Ticker'], how='left')
+#df_merge['p/l'] = (df_merge['Bought Price'] - df_merge['close']) * df_merge.Quantity
+
+#%%
 
 
 
