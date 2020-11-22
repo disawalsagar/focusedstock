@@ -77,6 +77,14 @@ df_merge1 = portfolio_df.merge(t_df_VOO, left_on = ['bought_date'], right_on=['d
 df_merge1 = df_merge1.drop('date', axis=1)
 
 #%%
+df_merge1.loc[:,["voo_Ticker"]] = df_merge1.where(pd.notna(df_merge1), get_missing_val(df_merge1['bought_date']))
+
+#%%
+def get_missing_val(dt):
+    print(dt)
+    return -7
+
+#%%
 def lat_dts(df):
     df_1 = df.groupby(by=["Ticker"], as_index=False).apply(lambda x: x.sort_values(["date"], ascending = False)).reset_index(drop=True)
     df_srtd = df_1.groupby('Ticker').head(1).reset_index(drop=True)
@@ -85,6 +93,7 @@ def lat_dts(df):
 #getting the recent price of every stock
 ohlc_all_tickers_srtd_df = lat_dts(ohlc_all_tickers_df)[['date', 'close', 'Ticker']]
 ohlc_all_tickers_srtd_df.rename(columns = {'date' : 'latest_date', 'close': 'latest_close'},inplace = True)
+
 
 #%%
 #join the table to have bought price, VOO price on the bought date and recent price of stock and VOO in the same table
@@ -132,6 +141,8 @@ fig = px.pie(df_merge, values='total_val',
              hole = 0.8,
              title='Portfolio Distribution')
 plot(fig, auto_open=True)
+#%%
+
 
 
 
