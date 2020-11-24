@@ -18,6 +18,8 @@ from alpha_vantage.fundamentaldata  import FundamentalData
 from alpha_vantage.timeseries  import TimeSeries 
 import pandas as pd
 import time
+import datetime
+import timedelta
 
 
 #%% Generate api key
@@ -26,24 +28,6 @@ api_key = sk.fmp_api_key()
 #%% Data Generation
 fd = FundamentalData(key=api_key, output_format='pandas')
 ts = TimeSeries(key=api_key, output_format='pandas')
-
-
-#%% 
-portfolio_df = pd.read_csv(r'C:\Users\sdisawal\python_projects\focusedstock\rbh.csv', index_col='Symbol')
-#del p_df["No"]
- 
-#%%
-snp = ts.get_daily('VOO', outputsize='full')
-snp[0].reset_index().to_csv(r'C:\Users\sdisawal\Desktop\Stocks\Code\csv\snp.csv', header=True, index=False)
-
-#%%
-snp = pd.read_csv(r'C:\Users\sdisawal\Desktop\Stocks\Code\csv\snp.csv')
-snp.rename(columns= {'4. close' : 'close'},inplace = True)
-portfolio_df = pd.read_csv(r'C:\Users\sdisawal\python_projects\focusedstock\rbh.csv')
-#%%
-dt_fltr = portfolio_df['Date']
-voo_df = snp[snp['date'].isin(dt_fltr)][['date','close']].reset_index(drop=True)
-voo_df['Ticker'] = 'VOO'
 #%% Today's return of all stocks
 
 tickers = set((portfolio_df["Symbol"]).to_list())
@@ -63,11 +47,26 @@ for ticker in tickers:
 #%%
 ohlc_all_tickers_df.reset_index().to_csv(r'C:\Users\sdisawal\Desktop\Stocks\Code\csv\stock_Values.csv', header=True, index=False)
 
+
+#%% 
+portfolio_df = pd.read_csv(r'C:\Users\sdisawal\python_projects\focusedstock\rbh.csv', index_col='Symbol')
+
+snp = ts.get_daily('VOO', outputsize='full')
+snp[0].reset_index().to_csv(r'C:\Users\sdisawal\Desktop\Stocks\Code\csv\snp.csv', header=True, index=False)
+
+
+snp = pd.read_csv(r'C:\Users\sdisawal\Desktop\Stocks\Code\csv\snp.csv')
+snp.rename(columns= {'4. close' : 'close'},inplace = True)
+portfolio_df = pd.read_csv(r'C:\Users\sdisawal\python_projects\focusedstock\rbh.csv')
+
+dt_fltr = portfolio_df['Date']
+voo_df = snp[snp['date'].isin(dt_fltr)][['date','close']].reset_index(drop=True)
+voo_df['Ticker'] = 'VOO'
+
 #%%
 ohlc_all_tickers_df = pd.read_csv(r'C:\Users\sdisawal\Desktop\Stocks\Code\csv\stock_Values.csv')
 ohlc_all_tickers_df.rename(columns= {'4. close' : 'close'},inplace = True)
 
-#%%
 #Figure out VOO stock price on the day of stock bought date
 portfolio_df = portfolio_df[['Stocks', 'Symbol', 'Quantity','Bought Price','Date']]
 portfolio_df.rename(columns = {'Date': 'bought_date'},inplace = True)
@@ -75,14 +74,14 @@ t_df_VOO = ohlc_all_tickers_df[ohlc_all_tickers_df['Ticker'] == 'VOO'][['Ticker'
 t_df_VOO.rename(columns = {'close': 'voo_close', 'Ticker': 'voo_Ticker'},inplace = True)
 df_merge1 = portfolio_df.merge(t_df_VOO, left_on = ['bought_date'], right_on=['date'], how='left')
 df_merge1 = df_merge1.drop('date', axis=1)
-
-#%%
-df_merge1.loc[:,["voo_Ticker"]] = df_merge1.where(pd.notna(df_merge1), get_missing_val(df_merge1['bought_date']))
+df_merge1.loc[:,["voo_close"]] = df_merge1.where(pd.notna(df_merge1), get_missing_val(df_merge1['bought_date']))
 
 #%%
 def get_missing_val(dt):
-    print(dt)
-    return -7
+    dt = datetime.strptime(dt, '%Y-%m-%d')
+    dt.
+    x = snp.loc[dt,'close']
+    return x
 
 #%%
 def lat_dts(df):
