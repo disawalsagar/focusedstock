@@ -12,7 +12,7 @@ import plotly.express as px
 #print(sys.path)
 
 
-#%% Import Statements
+# Import Statements
 import secrets_key as sk
 from alpha_vantage.fundamentaldata  import FundamentalData 
 from alpha_vantage.timeseries  import TimeSeries 
@@ -21,12 +21,20 @@ import time
 from datetime import datetime, timedelta, date
 
 
-#%% Generate api key
+# Generate api key
 api_key = sk.fmp_api_key()
 
-#%% Data Generation
+# Data Generation
 fd = FundamentalData(key=api_key, output_format='pandas')
 ts = TimeSeries(key=api_key, output_format='pandas')
+
+#%%Read portfolio file
+portfolio_df = pd.read_csv(r'C:\Users\sdisawal\python_projects\focusedstock\rbh.csv', 
+                           parse_dates=['Date'])
+portfolio_df = portfolio_df[['Stocks', 'Symbol', 'Quantity','Bought Price','Date']]
+portfolio_df.rename(columns = {'Date': 'bought_date'},inplace = True)
+portfolio_df.replace('CGX', value = 'CGC')
+
 #%% Today's return of all stocks
 
 tickers = set((portfolio_df["Symbol"]).to_list())
@@ -59,11 +67,6 @@ snp = pd.read_csv(r'C:\Users\sdisawal\Desktop\Stocks\Code\csv\snp.csv')
                   #parse_dates=['date'])
 snp.rename(columns= {'4. close' : 'close'},inplace = True)
 snp['date'] = snp.apply(lambda x: (datetime.strptime(x.date, "%Y-%m-%d")), axis = 1)
-#%%Read portfolio file
-portfolio_df = pd.read_csv(r'C:\Users\sdisawal\python_projects\focusedstock\rbh.csv', 
-                           parse_dates=['Date'])
-portfolio_df = portfolio_df[['Stocks', 'Symbol', 'Quantity','Bought Price','Date']]
-portfolio_df.rename(columns = {'Date': 'bought_date'},inplace = True)
 #portfolio_df  = portfolio_df.apply(lambda row: (datetime.strptime(row['Date'], '%Y-%m-%d').date()), axis = 1)
 #portfolio_df.loc[:,'Date'] = pd.to_datetime(portfolio_df['Date']).dt.date
 #%% filter the dates from the portfolio
@@ -148,8 +151,15 @@ fig = px.pie(df_merge, values='total_val',
              hole = 0.8,
              title='Portfolio Distribution')
 plot(fig, auto_open=True)
-#%%
 
+#%%
+df_qte = pd.read_csv(r'C:\Users\sdisawal\Desktop\Stocks\Code\csv\qte.csv')
+
+#%%
+df_qte = df_qte.loc[:,['Symbol','MarketCapitalization']]
+df_with_marketcap=df_merge.merge(df_qte, on='Symbol', how='inner')
+#%%
+fd.get_company_overview(symbol='CGX')
 
 
 
