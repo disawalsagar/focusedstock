@@ -14,7 +14,7 @@ sys.path.append(r'C:\Users\sdisawal\PycharmProjects\LearnApi\alpha_vantage')
 
 #%% Import Statements
 import secrets_key as sk
-#from alpha_vantage.fundamentaldata  import FundamentalData 
+from alpha_vantage.fundamentaldata  import FundamentalData 
 import pandas as pd
 import time
 from functools import reduce
@@ -28,6 +28,7 @@ fd = FundamentalData(key=api_key, output_format='pandas')
 
 #%% 
 p_df = pd.read_csv(r'C:\Users\sdisawal\python_projects\focusedstock\rbh.csv')
+p_df.replace(to_replace='CGX', value='CGC', inplace=True)
 tickers = p_df["Symbol"].to_list() 
 #%%
 ###################### Data Ingestion ######################
@@ -74,12 +75,12 @@ def fin_dfs(tickers, st_type):
 #%%
 #df_bal = fin_dfs(tickers, "balance-sheet-statement") 
 #df_inc = fin_dfs(tickers, "income-statement") 
-#df_qte = fin_dfs(tickers, "company-overview") 
-df_cf = fin_dfs(tickers, "cash-flow-statement")  
+df_qte = fin_dfs(tickers, "company-overview") 
+#df_cf = fin_dfs(tickers, "cash-flow-statement")  
 #%%
-df_bal.to_csv(r'C:\Users\sdisawal\Desktop\Stocks\Code\csv\bal.csv', header=True, index=False)
-df_inc.to_csv(r'C:\Users\sdisawal\Desktop\Stocks\Code\csv\inc.csv', header=True, index=False)
-df_cf.to_csv(r'C:\Users\sdisawal\Desktop\Stocks\Code\csv\cf.csv', header=True, index=False)
+#df_bal.to_csv(r'C:\Users\sdisawal\Desktop\Stocks\Code\csv\bal.csv', header=True, index=False)
+#df_inc.to_csv(r'C:\Users\sdisawal\Desktop\Stocks\Code\csv\inc.csv', header=True, index=False)
+#df_cf.to_csv(r'C:\Users\sdisawal\Desktop\Stocks\Code\csv\cf.csv', header=True, index=False)
 df_qte.to_csv(r'C:\Users\sdisawal\Desktop\Stocks\Code\csv\qte.csv', header=True, index=False)
 
 #%%

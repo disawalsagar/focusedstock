@@ -33,7 +33,7 @@ portfolio_df = pd.read_csv(r'C:\Users\sdisawal\python_projects\focusedstock\rbh.
                            parse_dates=['Date'])
 portfolio_df = portfolio_df[['Stocks', 'Symbol', 'Quantity','Bought Price','Date']]
 portfolio_df.rename(columns = {'Date': 'bought_date'},inplace = True)
-portfolio_df.replace('CGX', value = 'CGC')
+portfolio_df.replace(to_replace='CGX', value='CGC', inplace=True)
 
 #%% Today's return of all stocks
 
@@ -48,7 +48,7 @@ for ticker in tickers:
             i = 0
         data, metadata = ts.get_daily(symbol=ticker, outputsize='full')
         data['Ticker'] = ticker
-        ohlc_all_tickers_df  = ohlc_all_tickers_df .append(data)
+        ohlc_all_tickers_df  = ohlc_all_tickers_df.append(data)
         i= i+1
 
 #%%
@@ -79,7 +79,8 @@ snp['date'] = snp.apply(lambda x: (datetime.strptime(x.date, "%Y-%m-%d")), axis 
 ohlc_all_tickers_df = pd.read_csv(r'C:\Users\sdisawal\Desktop\Stocks\Code\csv\stock_Values.csv',
                                   parse_dates=['date'])
 ohlc_all_tickers_df.rename(columns= {'4. close' : 'close'},inplace = True)
-#%%Figure out VOO stock price on the day of stock bought date
+
+#Figure out VOO stock price on the day of stock bought date
 t_df_VOO = ohlc_all_tickers_df[ohlc_all_tickers_df['Ticker'] == 'VOO'][['Ticker','date','close']]
 t_df_VOO.rename(columns = {'close': 'voo_close', 'Ticker': 'voo_Ticker'},inplace = True)
 df_merge1 = portfolio_df.merge(t_df_VOO, left_on = ['bought_date'], right_on=['date'], how='left')
@@ -119,18 +120,41 @@ df_merge = df_merge1.merge(ohlc_all_tickers_srtd_df, left_on = ['Symbol'], right
 voo_latest_price = ohlc_all_tickers_srtd_df.loc[ohlc_all_tickers_srtd_df['Ticker'] == 'VOO', 'latest_close'].values[0]
 df_merge = df_merge.drop('Ticker', axis=1)
 df_merge['voo_latest_price'] = voo_latest_price 
-#%%
+
 df_merge['total_val'] = df_merge['Bought Price'] * df_merge.Quantity
 df_merge['real_voo_qty'] = df_merge['total_val']/df_merge['voo_close']
 
-#%%
+
 #calculating the difference between recent and bough price
 df_merge['S&P'] = (df_merge['latest_close'] - df_merge['Bought Price']) * df_merge.Quantity
 df_merge['Your Stocks'] = (df_merge['voo_latest_price'] - df_merge['voo_close']) * df_merge['real_voo_qty'] 
 
 #%%
-df_merge.to_csv(r'C:\Users\sdisawal\Desktop\Stocks\Code\csv\final_port.csv', header=True, index=False)
+#df_merge.to_csv(r'C:\Users\sdisawal\Desktop\Stocks\Code\csv\final_port.csv', header=True, index=False)
 
+
+#%%
+df_qte = pd.read_csv(r'C:\Users\sdisawal\Desktop\Stocks\Code\csv\qte.csv')
+
+#%%
+def cal_marketcap(market_cap):
+    
+    if market_cap > 10000000000:
+        mc='Large Cap'
+    elif 2000000000 < market_cap <= 10000000000:
+        mc='Mid Cap'
+    elif 2000000000 >= market_cap:
+        mc='Small Cap'
+    else:
+        mc='NA'
+    return mc
+#%%
+df_qte = df_qte.loc[:,['Symbol','MarketCapitalization']]
+df_qte['MarketCapitalization'] = pd.to_numeric(df_qte.MarketCapitalization, errors='coerce')
+df_with_marketcap=df_merge.merge(df_qte, on='Symbol', how='left')
+df_with_marketcap['marketcap'] = df_with_marketcap.MarketCapitalization.apply(cal_marketcap)
+df_with_marketcap.fillna('NA') 
+df_with_marketcap.to_csv(r'C:\Users\sdisawal\Desktop\Stocks\Code\csv\final_port.csv', header=True, index=False)
 #%%
 from plotly.offline import plot
 import plotly.figure_factory as ff
@@ -148,18 +172,28 @@ plot(fig, auto_open=True)
 #%%
 fig = px.pie(df_merge, values='total_val',
              names='Stocks',
-             hole = 0.8,
+             #hole = 0.8,
              title='Portfolio Distribution')
 plot(fig, auto_open=True)
 
 #%%
-df_qte = pd.read_csv(r'C:\Users\sdisawal\Desktop\Stocks\Code\csv\qte.csv')
+fig =px.sunburst(
+    df_with_marketcap,
+    path = ['marketcap','Stocks'],
+    #names='Stocks',
+    #parents='marketcap',
+    values='total_val',
+)
+plot(fig, auto_open=True)
+#%%
+fig = px.treemap(
+    df_with_marketcap, 
+    path=['Stocks'], 
+    values='total_val'
+    )
+plot(fig, auto_open=True)
 
-#%%
-df_qte = df_qte.loc[:,['Symbol','MarketCapitalization']]
-df_with_marketcap=df_merge.merge(df_qte, on='Symbol', how='inner')
-#%%
-fd.get_company_overview(symbol='CGX')
+
 
 
 
