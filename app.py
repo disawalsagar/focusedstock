@@ -5,13 +5,14 @@
 import base64
 import datetime
 import io
-
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import plotly.express as px
 import pandas as pd
 import dash_table
+from dash.dependencies import Input, Output, State
+
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -111,8 +112,9 @@ app.layout = html.Div(children=[
             # Allow multiple files to be uploaded
             multiple=True
         ),
+        ),
          html.Div(id='output-data-upload'),
-    ),
+    
     html.Div(children='''
         Dash: A web application framework for Python.
     '''),
