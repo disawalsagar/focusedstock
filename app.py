@@ -12,7 +12,7 @@ import plotly.express as px
 import pandas as pd
 import dash_table
 from dash.dependencies import Input, Output, State
-import snp_diff as sf
+from snp_diff import get_df_with_mc
 
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -21,29 +21,9 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 # assume you have a "long-form" data frame
 # see https://plotly.com/python/px-arguments/ for more options
-df = pd.read_csv(r'C:\Users\sdisawal\Desktop\Stocks\Code\csv\final_port.csv')
+p_df = pd.DataFrame()
 
-fig = px.histogram(df
-     ,x = 'Symbol'
-     ,y = ['S&P', 'Your Stocks']
-     , title='Individual Stock vs Index'
-     )
-fig1 = px.pie(df, values='total_val',
-             names='Stocks',
-             hole = 0.8,
-             title='Portfolio Distribution')
-fig3 =px.sunburst(
-    df,
-    path = ['marketcap','Stocks'],
-    names='Stocks',
-    #parents='marketcap',
-    values='total_val'
-)
-fig4 = px.treemap(
-    df, 
-    path=['Stocks'], 
-    values='total_val'
-    )
+
 def parse_contents(contents, filename, date):
     content_type, content_string = contents.split(',')
 
@@ -53,9 +33,11 @@ def parse_contents(contents, filename, date):
             # Assume that the user uploaded a CSV file
             df = pd.read_csv(
                 io.StringIO(decoded.decode('utf-8')))
+            p_df =df
         elif 'xls' in filename:
             # Assume that the user uploaded an excel file
             df = pd.read_excel(io.BytesIO(decoded))
+            p_df =df
     except Exception as e:
         print(e)
         return html.Div([
@@ -71,15 +53,33 @@ def parse_contents(contents, filename, date):
             columns=[{'name': i, 'id': i} for i in df.columns]
         ),
 
-        html.Hr(),  # horizontal line
+        html.Hr()  # horizontal line 
+        ])
 
-        # For debugging, display the raw contents provided by the web browser
-        html.Div('Raw Content'),
-        html.Pre(contents[0:200] + '...', style={
-            'whiteSpace': 'pre-wrap',
-            'wordBreak': 'break-all'
-        })
-    ])
+p_df=get_df_with_mc(p_df)
+
+fig = px.histogram(p_df
+     ,x = 'Symbol'
+     ,y = ['S&P', 'Your Stocks']
+     , title='Individual Stock vs Index'
+     )
+fig1 = px.pie(p_df, values='total_val',
+             names='Stocks',
+             hole = 0.8,
+             title='Portfolio Distribution')
+fig3 =px.sunburst(
+    p_df,
+    path = ['marketcap','Stocks'],
+    names='Stocks',
+    #parents='marketcap',
+    values='total_val'
+)
+fig4 = px.treemap(
+    p_df, 
+    path=['Stocks'], 
+    values='total_val'
+    )
+
 @app.callback(Output('output-data-upload', 'children'),
               Input('upload-data', 'contents'),
               State('upload-data', 'filename'),

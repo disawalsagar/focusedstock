@@ -39,3 +39,10 @@ for ticker in tickers:
         
 #%%
 tickers = set((portfolio_df["Symbol"]).to_list())
+ohlc_all_tickers_df.reset_index().to_csv(r'C:\Users\sdisawal\Desktop\Stocks\Code\csv\stock_Values.csv', header=True, index=False)
+#%%
+portfolio_df = pd.read_csv(r'C:\Users\sdisawal\python_projects\focusedstock\rbh.csv', 
+                           parse_dates=['Date'])
+portfolio_df = portfolio_df[['Stocks', 'Symbol', 'Quantity','Bought Price','Date']]
+portfolio_df.rename(columns = {'Date': 'bought_date'},inplace = True)
+portfolio_df.replace(to_replace='CGX', value='CGC', inplace=True)
