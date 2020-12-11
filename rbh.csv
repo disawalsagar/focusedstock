@@ -1,17 +1,17 @@
 Stocks,Symbol,Sector,Type of stock,Quantity,Bought Price,Current Price,Return,Return_P,WHY?,GDP,Date
-Occidental Petroleum,OXY,,Growth,2,58,12,-92,-79%,,,2019-05-01
-Canopy Growth,CGX,,Growth,1,26.03,16,-210,-57%,,,2018-08-06
-Canopy Growth,CGX,,Growth,4,25,16,-210,-57%,,,2018-07-30
-Canopy Growth,CGX,,Growth,5,42.03,16,-210,-57%,,,2018-08-23
-TD Ameritade,AMTD,,Growth,21,37.09,39,100,15%,,,2020-10-06
-Disney,DIS,,Growth,5,99.99,132,290,28%,,,2020-04-09
-Disney,DIS,,Growth,5,106.22,132,290,28%,,,2018-07-22
-Nike,NKE,,Dividend,3,77,118,123,53%,,,2018-07-17
-Boeing,BA,,Turnaround,1,357.06,,,,,,2018-07-17
-Boeing,BA,,Turnaround,1,348.3,,,,,,2018-08-08
-Delta,DAL,,Turnaround,10,45,,,,,,2020-03-03
-Delta,DAL,,Turnaround,10,44.47,,,,,,2020-03-09
-Delta,DAL,,Turnaround,1,32.85,,,,,,2020-03-17
-Delta,DAL,,Turnaround,10,22.78,,,,,,2020-04-26
-Delta,DAL,,Turnaround,2,31.82,,,,,,2020-10-05
-Teladoc,TDOC,,Growth,7.7,221,,,,,,2020-10-12
+Occidental Petroleum,OXY,,Growth,2,58,12,-92,-79%,,,5/1/2019
+Canopy Growth,CGC,,Growth,1,26.03,16,-210,-57%,,,8/6/2018
+Canopy Growth,CGC,,Growth,4,25,16,-210,-57%,,,7/30/2018
+Canopy Growth,CGC,,Growth,5,42.03,16,-210,-57%,,,8/23/2018
+TD Ameritade,AMTD,,Growth,21,37.09,39,100,15%,,,10/6/2020
+Disney,DIS,,Growth,5,99.99,132,290,28%,,,4/9/2020
+Disney,DIS,,Growth,5,106.22,132,290,28%,,,7/22/2018
+Nike,NKE,,Dividend,3,77,118,123,53%,,,7/17/2018
+Boeing,BA,,Turnaround,1,357.06,,,,,,7/17/2018
+Boeing,BA,,Turnaround,1,348.3,,,,,,8/8/2018
+Delta,DAL,,Turnaround,10,45,,,,,,3/3/2020
+Delta,DAL,,Turnaround,10,44.47,,,,,,3/9/2020
+Delta,DAL,,Turnaround,1,32.85,,,,,,3/17/2020
+Delta,DAL,,Turnaround,10,22.78,,,,,,4/26/2020
+Delta,DAL,,Turnaround,2,31.82,,,,,,10/5/2020
+Teladoc,TDOC,,Growth,7.7,221,,,,,,10/12/2020

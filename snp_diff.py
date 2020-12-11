@@ -8,6 +8,7 @@ Created on Sun Nov  8 21:58:32 2020
 
 import pandas as pd
 from datetime import datetime, timedelta, date
+import logging
 
 
 df_qte = pd.read_csv(r'C:\Users\sdisawal\Desktop\Stocks\Code\csv\qte.csv')
@@ -46,6 +47,13 @@ def lat_dts(df):
     return df_srtd
 
 def get_df_with_mc(portfolio_df):
+    
+    print("inside get_df_with_mc")
+    #logging.info("inside get_df_with_mc")
+    portfolio_df = portfolio_df[['Stocks', 'Symbol', 'Quantity','Bought Price','Date']]
+    portfolio_df.rename(columns = {'Date': 'bought_date'},inplace = True)
+    print("portfolio renames")
+    
     #Figure out VOO stock price on the day of stock bought date
     t_df_VOO = ohlc_all_tickers_df[ohlc_all_tickers_df['Ticker'] == 'VOO'][['Ticker','date','close']]
     t_df_VOO.rename(columns = {'close': 'voo_close', 'Ticker': 'voo_Ticker'},inplace = True)
@@ -72,7 +80,7 @@ def get_df_with_mc(portfolio_df):
     df_merge['S&P'] = (df_merge['latest_close'] - df_merge['Bought Price']) * df_merge.Quantity
     df_merge['Your Stocks'] = (df_merge['voo_latest_price'] - df_merge['voo_close']) * df_merge['real_voo_qty'] 
     
-    df_qte = df_qte.loc[:,['Symbol','MarketCapitalization']]
+    #df_qte = df_qte.loc[:,['Symbol','MarketCapitalization']]
     df_qte['MarketCapitalization'] = pd.to_numeric(df_qte.MarketCapitalization, errors='coerce')
     df_with_marketcap=df_merge.merge(df_qte, on='Symbol', how='left')
     df_with_marketcap['marketcap'] = df_with_marketcap.MarketCapitalization.apply(cal_marketcap)

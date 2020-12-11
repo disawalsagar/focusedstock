@@ -28,16 +28,14 @@ def parse_contents(contents, filename, date):
     content_type, content_string = contents.split(',')
 
     decoded = base64.b64decode(content_string)
+    
     try:
         if 'csv' in filename:
             # Assume that the user uploaded a CSV file
             df = pd.read_csv(
-                io.StringIO(decoded.decode('utf-8')))
-            p_df =df
-        elif 'xls' in filename:
-            # Assume that the user uploaded an excel file
-            df = pd.read_excel(io.BytesIO(decoded))
-            p_df =df
+                io.StringIO(decoded.decode('utf-8')),parse_dates=['Date'])
+            print(df)
+            p_df = get_df_with_mc(df.copy(deep=True))
     except Exception as e:
         print(e)
         return html.Div([
@@ -53,32 +51,50 @@ def parse_contents(contents, filename, date):
             columns=[{'name': i, 'id': i} for i in df.columns]
         ),
 
-        html.Hr()  # horizontal line 
+        html.Hr(),
+
+    dcc.Graph(
+        id='example-graph',
+        figure=get_figs(p_df)[0]
+    )
+    ,dcc.Graph(
+        id='example-graph1',
+        figure=get_figs(p_df)[1]
+    )
+    ,dcc.Graph(
+        id='example-graph2',
+        figure=get_figs(p_df)[2]
+    )
+    ,dcc.Graph(
+        id='example-graph3',
+        figure=get_figs(p_df)[3]
+    )  # horizontal line 
         ])
 
-p_df=get_df_with_mc(p_df)
 
-fig = px.histogram(p_df
-     ,x = 'Symbol'
-     ,y = ['S&P', 'Your Stocks']
-     , title='Individual Stock vs Index'
-     )
-fig1 = px.pie(p_df, values='total_val',
-             names='Stocks',
-             hole = 0.8,
-             title='Portfolio Distribution')
-fig3 =px.sunburst(
-    p_df,
-    path = ['marketcap','Stocks'],
-    names='Stocks',
-    #parents='marketcap',
-    values='total_val'
-)
-fig4 = px.treemap(
-    p_df, 
-    path=['Stocks'], 
-    values='total_val'
+def get_figs(p_df):
+    fig = px.histogram(p_df
+         ,x = 'Symbol'
+         ,y = ['S&P', 'Your Stocks']
+         , title='Individual Stock vs Index'
+         )
+    fig1 = px.pie(p_df, values='total_val',
+                 names='Stocks',
+                 hole = 0.8,
+                 title='Portfolio Distribution')
+    fig3 =px.sunburst(
+        p_df,
+        path = ['marketcap','Stocks'],
+        names='Stocks',
+        #parents='marketcap',
+        values='total_val'
     )
+    fig4 = px.treemap(
+        p_df, 
+        path=['Stocks'], 
+        values='total_val'
+        )
+    return (fig,fig1,fig3,fig4)
 
 @app.callback(Output('output-data-upload', 'children'),
               Input('upload-data', 'contents'),
@@ -118,24 +134,7 @@ app.layout = html.Div(children=[
     
     html.Div(children='''
         Dash: A web application framework for Python.
-    '''),
-
-    dcc.Graph(
-        id='example-graph',
-        figure=fig
-    )
-    ,dcc.Graph(
-        id='example-graph1',
-        figure=fig1
-    )
-    ,dcc.Graph(
-        id='example-graph2',
-        figure=fig3
-    )
-    ,dcc.Graph(
-        id='example-graph3',
-        figure=fig4
-    )
+    ''')
 ])
 
 if __name__ == '__main__':
