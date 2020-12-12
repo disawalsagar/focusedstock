@@ -34,8 +34,9 @@ def parse_contents(contents, filename, date):
             # Assume that the user uploaded a CSV file
             df = pd.read_csv(
                 io.StringIO(decoded.decode('utf-8')),parse_dates=['Date'])
-            print(df)
-            p_df = get_df_with_mc(df.copy(deep=True))
+            
+            p_df = get_df_with_mc(df)
+            print(p_df)
     except Exception as e:
         print(e)
         return html.Div([
@@ -51,32 +52,33 @@ def parse_contents(contents, filename, date):
             columns=[{'name': i, 'id': i} for i in df.columns]
         ),
 
-        html.Hr(),
-
-    dcc.Graph(
-        id='example-graph',
-        figure=get_figs(p_df)[0]
-    )
-    ,dcc.Graph(
-        id='example-graph1',
+        html.Hr()
+        
+        ,dcc.Graph(
+         id='example-graph1',
         figure=get_figs(p_df)[1]
-    )
-    ,dcc.Graph(
-        id='example-graph2',
-        figure=get_figs(p_df)[2]
-    )
-    ,dcc.Graph(
-        id='example-graph3',
-        figure=get_figs(p_df)[3]
-    )  # horizontal line 
+        )
+        ,dcc.Graph(
+         id='example-graph2',
+         figure=get_figs(p_df)[2]
+         )
+        ,dcc.Graph(
+         id='example-graph3',
+         figure=get_figs(p_df)[3]
+         )
+        ,dcc.Graph(
+         id='example-graph',
+         figure=get_figs(p_df)[0]
+         )
         ])
 
 
 def get_figs(p_df):
-    fig = px.histogram(p_df
+    fig = px.bar(p_df
          ,x = 'Symbol'
          ,y = ['S&P', 'Your Stocks']
          , title='Individual Stock vs Index'
+         ,barmode='group'
          )
     fig1 = px.pie(p_df, values='total_val',
                  names='Stocks',
@@ -108,7 +110,7 @@ def update_output(list_of_contents, list_of_names, list_of_dates):
         return children
     
 app.layout = html.Div(children=[
-    html.H1(children='Hello Dash'),
+   
     html.Div(
         dcc.Upload(
             id='upload-data',
@@ -130,11 +132,10 @@ app.layout = html.Div(children=[
             multiple=True
         ),
         ),
-         html.Div(id='output-data-upload'),
     
-    html.Div(children='''
-        Dash: A web application framework for Python.
-    ''')
+    html.Div(id='output-data-upload'),
+    
+    
 ])
 
 if __name__ == '__main__':

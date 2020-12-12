@@ -46,11 +46,11 @@ def lat_dts(df):
     df_srtd = df_1.groupby('Ticker').head(1).reset_index(drop=True)
     return df_srtd
 
-def get_df_with_mc(portfolio_df):
+def get_df_with_mc(_portfolio_df):
     
     print("inside get_df_with_mc")
     #logging.info("inside get_df_with_mc")
-    portfolio_df = portfolio_df[['Stocks', 'Symbol', 'Quantity','Bought Price','Date']]
+    portfolio_df = _portfolio_df[['Stocks', 'Symbol', 'Quantity','Bought Price','Date']].copy(deep=True)
     portfolio_df.rename(columns = {'Date': 'bought_date'},inplace = True)
     print("portfolio renames")
     
@@ -80,7 +80,7 @@ def get_df_with_mc(portfolio_df):
     df_merge['S&P'] = (df_merge['latest_close'] - df_merge['Bought Price']) * df_merge.Quantity
     df_merge['Your Stocks'] = (df_merge['voo_latest_price'] - df_merge['voo_close']) * df_merge['real_voo_qty'] 
     
-    #df_qte = df_qte.loc[:,['Symbol','MarketCapitalization']]
+   # df_qte = df_qte[['Symbol','MarketCapitalization']]
     df_qte['MarketCapitalization'] = pd.to_numeric(df_qte.MarketCapitalization, errors='coerce')
     df_with_marketcap=df_merge.merge(df_qte, on='Symbol', how='left')
     df_with_marketcap['marketcap'] = df_with_marketcap.MarketCapitalization.apply(cal_marketcap)
