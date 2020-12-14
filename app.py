@@ -60,11 +60,12 @@ def parse_contents(contents, filename, date):
         )
         ,dcc.Graph(
          id='example-graph2',
-         figure=get_figs(p_df)[2]
+         figure=get_pie(p_df, value=2020)
          )
+       
         ,dcc.Graph(
          id='example-graph3',
-         figure=get_figs(p_df)[3]
+         figure=get_figs(p_df)[2]
          )
         ,dcc.Graph(
          id='example-graph',
@@ -72,7 +73,13 @@ def parse_contents(contents, filename, date):
          )
         ])
 
-
+def get_pie(p_df, value=2020):
+    fig1 = px.pie(p_df, values='total_val',
+                 names='Stocks',
+                 hole = 0.8,
+                 title='Portfolio Distribution')
+    return fig1
+    
 def get_figs(p_df):
     fig = px.bar(p_df
          ,x = 'Symbol'
@@ -80,13 +87,10 @@ def get_figs(p_df):
          , title='Individual Stock vs Index'
          ,barmode='group'
          )
-    fig1 = px.pie(p_df, values='total_val',
-                 names='Stocks',
-                 hole = 0.8,
-                 title='Portfolio Distribution')
+    
     fig3 =px.sunburst(
         p_df,
-        path = ['marketcap','Stocks'],
+        path = ['Sector', 'marketcap','Stocks'],
         names='Stocks',
         #parents='marketcap',
         values='total_val'
@@ -96,8 +100,15 @@ def get_figs(p_df):
         path=['Stocks'], 
         values='total_val'
         )
-    return (fig,fig1,fig3,fig4)
+    return (fig,fig3,fig4)
 
+@app.callback(
+    Output(component_id='slider-output-container', component_property='children'),
+    Input(component_id='my-slider', component_property='value')
+)
+def update_output_div(input_value):
+    return 'Output: {}'.format(input_value)
+            
 @app.callback(Output('output-data-upload', 'children'),
               Input('upload-data', 'contents'),
               State('upload-data', 'filename'),
@@ -133,8 +144,15 @@ app.layout = html.Div(children=[
         ),
         ),
     
-    html.Div(id='output-data-upload'),
-    
+    html.Div(id='output-data-upload')
+    ,dcc.Slider(
+            id='my-slider',
+            min=2017,
+            max=2020,
+            value=2020,
+        )
+        ,html.Div(id='slider-output-container')
+        
     
 ])
 

@@ -85,6 +85,10 @@ def get_df_with_mc(_portfolio_df):
     df_with_marketcap=df_merge.merge(df_qte, on='Symbol', how='left')
     df_with_marketcap['marketcap'] = df_with_marketcap.MarketCapitalization.apply(cal_marketcap)
     df_with_marketcap.fillna('NA')
+    df_with_marketcap = df_with_marketcap[['Stocks','total_val','Sector', 'marketcap','S&P', 'Your Stocks','Symbol','bought_date']]
+    
+    df_with_marketcap.sort_values(by=['bought_date'], inplace=True)
+    df_with_marketcap['cumsum'] = df_with_marketcap.total_val.cumsum()
     
     return df_with_marketcap
  
