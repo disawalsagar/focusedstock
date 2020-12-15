@@ -13,6 +13,7 @@ import pandas as pd
 import dash_table
 from dash.dependencies import Input, Output, State
 from snp_diff import get_df_with_mc
+import dash_daq as daq
 
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -24,6 +25,12 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 df = pd.read_csv(r'C:\Users\sdisawal\python_projects\focusedstock\rbh.csv',parse_dates=['Date'])
 p_df = get_df_with_mc(df)
 
+ohlc_all_tickers_df = pd.read_csv(r'C:\Users\sdisawal\Desktop\Stocks\Code\csv\stock_Values.csv',
+                                  parse_dates=['date'])
+ohlc_all_tickers_df.rename(columns= {'4. close' : 'close'},inplace = True)
+
+def get_min_max(p_df):
+    return (p_df.year.min(), p_df.year.max()) 
 
 def parse_contents(contents, filename, date):
     content_type, content_string = contents.split(',')
@@ -76,10 +83,16 @@ def get_figs(p_df):
          , title='Individual Stock vs Index'
          ,barmode='group'
          )
-    
+    fig2 =px.sunburst(
+        p_df,
+        path = ['marketcap','Stocks'],
+        names='Stocks',
+        #parents='marketcap',
+        values='total_val'
+    )
     fig3 =px.sunburst(
         p_df,
-        path = ['Sector', 'marketcap','Stocks'],
+        path = ['Sector', 'Stocks'],
         names='Stocks',
         #parents='marketcap',
         values='total_val'
@@ -89,14 +102,9 @@ def get_figs(p_df):
         path=['Stocks'], 
         values='total_val'
         )
-    return (fig,fig3,fig4)
+    return (fig,fig2,fig3,fig4)
 
-@app.callback(
-    Output(component_id='slider-output-container', component_property='option'),
-    Input(component_id='my-slider', component_property='value')
-)
-def update_output_div(input_value):
-    return input_value
+
             
 @app.callback(Output('output-data-upload', 'children'),
               Input('upload-data', 'contents'),
@@ -137,15 +145,16 @@ app.layout = html.Div(children=[
     
         ,dcc.Graph(
          id='example-graph1',
-        figure=get_figs(p_df)[1]
+        figure=get_figs(p_df)[3]
         )
         ,dcc.Graph(
          id='example-graph2'
          )
-       ,dcc.Slider(
+       ,daq.Slider(
             id='my-slider',
-            min=2017,
-            max=2020,
+            min=get_min_max(p_df)[0],
+            max=get_min_max(p_df)[1],
+            handleLabel={"showCurrentValue": True,"label": "Year"},
             value=2020,
         )
         ,html.Div(id='slider-output-container')
@@ -155,8 +164,16 @@ app.layout = html.Div(children=[
          figure=get_figs(p_df)[2]
          )
         ,dcc.Graph(
+         id='example-graph67',
+         figure=get_figs(p_df)[1]
+         )
+        ,dcc.Graph(
          id='example-graph',
          figure=get_figs(p_df)[0]
+         )
+        ,dcc.Graph(
+         id='example-graph4',
+         figure=px.line(ohlc_all_tickers_df, x='date', y="1. open",color = 'Ticker')
          )
         
     
