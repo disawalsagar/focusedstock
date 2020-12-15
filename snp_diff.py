@@ -89,7 +89,8 @@ def get_df_with_mc(_portfolio_df):
     
     df_with_marketcap.sort_values(by=['bought_date'], inplace=True)
     df_with_marketcap['cumsum'] = df_with_marketcap.total_val.cumsum()
-    
+    df_with_marketcap['year']= df_with_marketcap['bought_date'].dt.year
+
     return df_with_marketcap
  
 if __name__ == '__main__':

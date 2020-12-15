@@ -21,7 +21,8 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 # assume you have a "long-form" data frame
 # see https://plotly.com/python/px-arguments/ for more options
-p_df = pd.DataFrame()
+df = pd.read_csv(r'C:\Users\sdisawal\python_projects\focusedstock\rbh.csv',parse_dates=['Date'])
+p_df = get_df_with_mc(df)
 
 
 def parse_contents(contents, filename, date):
@@ -54,32 +55,20 @@ def parse_contents(contents, filename, date):
 
         html.Hr()
         
-        ,dcc.Graph(
-         id='example-graph1',
-        figure=get_figs(p_df)[1]
-        )
-        ,dcc.Graph(
-         id='example-graph2',
-         figure=get_pie(p_df, value=2020)
-         )
        
-        ,dcc.Graph(
-         id='example-graph3',
-         figure=get_figs(p_df)[2]
-         )
-        ,dcc.Graph(
-         id='example-graph',
-         figure=get_figs(p_df)[0]
-         )
         ])
+@app.callback(
+    Output(component_id='example-graph2', component_property='figure'),
+    Input(component_id='my-slider', component_property='value'))
 
-def get_pie(p_df, value=2020):
-    fig1 = px.pie(p_df, values='total_val',
+def get_pie(value=2020):
+    p_df['year']= p_df['year'].astype('int64') 
+    p_df_1=p_df[p_df['year'] <= value]
+    fig = px.pie(p_df_1, values='total_val',
                  names='Stocks',
                  hole = 0.8,
                  title='Portfolio Distribution')
-    return fig1
-    
+    return fig
 def get_figs(p_df):
     fig = px.bar(p_df
          ,x = 'Symbol'
@@ -103,11 +92,11 @@ def get_figs(p_df):
     return (fig,fig3,fig4)
 
 @app.callback(
-    Output(component_id='slider-output-container', component_property='children'),
+    Output(component_id='slider-output-container', component_property='option'),
     Input(component_id='my-slider', component_property='value')
 )
 def update_output_div(input_value):
-    return 'Output: {}'.format(input_value)
+    return input_value
             
 @app.callback(Output('output-data-upload', 'children'),
               Input('upload-data', 'contents'),
@@ -145,13 +134,30 @@ app.layout = html.Div(children=[
         ),
     
     html.Div(id='output-data-upload')
-    ,dcc.Slider(
+    
+        ,dcc.Graph(
+         id='example-graph1',
+        figure=get_figs(p_df)[1]
+        )
+        ,dcc.Graph(
+         id='example-graph2'
+         )
+       ,dcc.Slider(
             id='my-slider',
             min=2017,
             max=2020,
             value=2020,
         )
         ,html.Div(id='slider-output-container')
+         
+        ,dcc.Graph(
+         id='example-graph3',
+         figure=get_figs(p_df)[2]
+         )
+        ,dcc.Graph(
+         id='example-graph',
+         figure=get_figs(p_df)[0]
+         )
         
     
 ])
