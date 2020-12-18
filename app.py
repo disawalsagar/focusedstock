@@ -14,12 +14,14 @@ import dash_table
 from dash.dependencies import Input, Output, State
 from snp_diff import get_df_with_mc
 import dash_daq as daq
+import dash_bootstrap_components as dbc
 
+#external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+#app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
-
+#app = dash.Dash(__name__)
 # assume you have a "long-form" data frame
 # see https://plotly.com/python/px-arguments/ for more options
 df = pd.read_csv(r'C:\Users\sdisawal\python_projects\focusedstock\rbh.csv',parse_dates=['Date'])
@@ -77,32 +79,32 @@ def get_pie(value=2020):
                  title='Portfolio Distribution')
     return fig
 def get_figs(p_df):
-    fig = px.bar(p_df
+    fig_bar_snp_diff = px.bar(p_df
          ,x = 'Symbol'
          ,y = ['S&P', 'Your Stocks']
          , title='Individual Stock vs Index'
          ,barmode='group'
          )
-    fig2 =px.sunburst(
+    fig_sunburst_mc =px.sunburst(
         p_df,
         path = ['marketcap','Stocks'],
         names='Stocks',
         #parents='marketcap',
         values='total_val'
     )
-    fig3 =px.sunburst(
+    fig_sunburst_sector =px.sunburst(
         p_df,
         path = ['Sector', 'Stocks'],
         names='Stocks',
         #parents='marketcap',
         values='total_val'
     )
-    fig4 = px.treemap(
+    fig_treemap_portfolio = px.treemap(
         p_df, 
         path=['Stocks'], 
         values='total_val'
         )
-    return (fig,fig2,fig3,fig4)
+    return (fig_bar_snp_diff,fig_sunburst_mc,fig_sunburst_sector,fig_treemap_portfolio)
 
 
             
@@ -116,10 +118,42 @@ def update_output(list_of_contents, list_of_names, list_of_dates):
             parse_contents(c, n, d) for c, n, d in
             zip(list_of_contents, list_of_names, list_of_dates)]
         return children
-    
-app.layout = html.Div(children=[
-   
-    html.Div(
+
+
+def drawText():
+    return html.Div([
+        dbc.Card(
+            dbc.CardBody([
+                html.Div([
+                    html.H2("Text"),
+                ], style={'textAlign': 'center'})
+            ])
+        ),
+    ])
+# Data
+df = px.data.iris()
+
+def drawFigure():
+    return  html.Div([
+        dbc.Card(
+            dbc.CardBody([
+                dcc.Graph(
+                    figure=px.bar(
+                        df, x="sepal_width", y="sepal_length", color="species"
+                    ).update_layout(
+                        template='plotly_dark',
+                        plot_bgcolor= 'rgba(0, 0, 0, 0)',
+                        paper_bgcolor= 'rgba(0, 0, 0, 0)',
+                    ),
+                    config={
+                        'displayModeBar': False
+                    }
+                )
+            ])
+        ),
+    ])
+app.layout = html.Div([
+html.Div(
         dcc.Upload(
             id='upload-data',
             children=html.Div([
@@ -158,8 +192,8 @@ app.layout = html.Div(children=[
             value=2020,
         )
         ,html.Div(id='slider-output-container')
-         
-        ,dcc.Graph(
+        ,html.Div(
+        [dcc.Graph(
          id='example-graph3',
          figure=get_figs(p_df)[2]
          )
@@ -167,6 +201,15 @@ app.layout = html.Div(children=[
          id='example-graph67',
          figure=get_figs(p_df)[1]
          )
+        ])
+        ,html.Div([
+        dbc.Row(
+            [
+            dbc.Col(dcc.Graph(id='example-graph564364',figure=get_figs(p_df)[1]),width=6),
+            dbc.Col(dcc.Graph(id='example-graph34344',figure=get_figs(p_df)[2]),width=6)
+           ] 
+        )
+        ])
         ,dcc.Graph(
          id='example-graph',
          figure=get_figs(p_df)[0]
@@ -174,10 +217,13 @@ app.layout = html.Div(children=[
         ,dcc.Graph(
          id='example-graph4',
          figure=px.line(ohlc_all_tickers_df, x='date', y="1. open",color = 'Ticker')
-         )
+         ),
         
+   
+ 
+         
     
 ])
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=True, port=8888)
