@@ -144,36 +144,35 @@ html.Div(
         ),
     
     html.Div(id='output-data-upload')
-      ,html.Div([
+      ,dbc.Container([
+          
                   dbc.Row([
-                       dbc.Col(dcc.Graph(id='example-graph1',figure=get_figs(p_df)[3]),width=8),
+                       dbc.Col(dcc.Graph(id='example-graph1',figure=get_figs(p_df)[3]),width=8,style={ "border-style": "solid"}),
                        dbc.Col([dcc.Graph(id='example-graph2'),daq.Slider(id='my-slider',
                                                                            min=get_min_max(p_df)[0],
                                                                             max=get_min_max(p_df)[1],
                                                                             handleLabel={"showCurrentValue": True,"label": "Year"},
-                                                                            value=2020,)],width=4)
-                         ])
-         ])
-       
-      
-       
-      
-        
-        ,html.Div([
-                    dbc.Row([
-                        dbc.Col(dcc.Graph(id='example-graph564364',figure=get_figs(p_df)[1])),
-                        dbc.Col(dcc.Graph(id='example-graph34344',figure=get_figs(p_df)[2]))
-                       ])
-        ])
-        
-        ,html.Div([
-                    dbc.Row([
-                        dbc.Col(dcc.Graph(id='example-graph',figure=get_figs(p_df)[0]),width=6),
-                        dbc.Col(dcc.Graph( id='example-graph4',figure=px.line(ohlc_all_tickers_df, x='date', y="1. open",color = 'Ticker')),width=6)
-                        ])
-        ])
+                                                                            value=2020,)],width=4,style={ "border-style": "solid"})
+                         ],style={ "border-style": "solid"})
          
+       
+      
+       
+                    ,dbc.Row([
+                        dbc.Col(dcc.Graph(id='example-graph564364',figure=get_figs(p_df)[1])),
+                        dbc.Col(dcc.Graph(id='example-graph34344',figure=get_figs(p_df)[2]),style={ "border-style": "solid"})
+                       ],no_gutters=True,style={ "border-style": "solid"})
         
+        
+        
+                    ,dbc.Row([
+                        dbc.Col(dcc.Graph(id='example-graph',figure=get_figs(p_df)[0]),width=6,style={ "border-style": "solid"}),
+                        dbc.Col(dcc.Graph( id='example-graph4',figure=px.line(ohlc_all_tickers_df, x='date', y="1. open",color = 'Ticker')),
+                                width=6,style={ "border-style": "solid"})
+                        ],style={ "border-style": "solid"})
+       
+         
+        ],style={ "border-style": "solid"})
    
  
          
