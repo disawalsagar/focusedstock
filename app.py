@@ -75,7 +75,7 @@ def get_pie(value=2020):
     p_df_1=p_df[p_df['year'] <= value]
     fig = px.pie(p_df_1, values='total_val',
                  names='Stocks',
-                 hole = 0.8,
+                 hole = 0.3,
                  title='Portfolio Distribution')
     return fig
 def get_figs(p_df):
@@ -120,38 +120,6 @@ def update_output(list_of_contents, list_of_names, list_of_dates):
         return children
 
 
-def drawText():
-    return html.Div([
-        dbc.Card(
-            dbc.CardBody([
-                html.Div([
-                    html.H2("Text"),
-                ], style={'textAlign': 'center'})
-            ])
-        ),
-    ])
-# Data
-df = px.data.iris()
-
-def drawFigure():
-    return  html.Div([
-        dbc.Card(
-            dbc.CardBody([
-                dcc.Graph(
-                    figure=px.bar(
-                        df, x="sepal_width", y="sepal_length", color="species"
-                    ).update_layout(
-                        template='plotly_dark',
-                        plot_bgcolor= 'rgba(0, 0, 0, 0)',
-                        paper_bgcolor= 'rgba(0, 0, 0, 0)',
-                    ),
-                    config={
-                        'displayModeBar': False
-                    }
-                )
-            ])
-        ),
-    ])
 app.layout = html.Div([
 html.Div(
         dcc.Upload(
@@ -176,48 +144,35 @@ html.Div(
         ),
     
     html.Div(id='output-data-upload')
-    
-        ,dcc.Graph(
-         id='example-graph1',
-        figure=get_figs(p_df)[3]
-        )
-        ,dcc.Graph(
-         id='example-graph2'
-         )
-       ,daq.Slider(
-            id='my-slider',
-            min=get_min_max(p_df)[0],
-            max=get_min_max(p_df)[1],
-            handleLabel={"showCurrentValue": True,"label": "Year"},
-            value=2020,
-        )
-        ,html.Div(id='slider-output-container')
-        ,html.Div(
-        [dcc.Graph(
-         id='example-graph3',
-         figure=get_figs(p_df)[2]
-         )
-        ,dcc.Graph(
-         id='example-graph67',
-         figure=get_figs(p_df)[1]
-         )
-        ])
+      ,html.Div([
+                  dbc.Row([
+                       dbc.Col(dcc.Graph(id='example-graph1',figure=get_figs(p_df)[3]),width=8),
+                       dbc.Col([dcc.Graph(id='example-graph2'),daq.Slider(id='my-slider',
+                                                                           min=get_min_max(p_df)[0],
+                                                                            max=get_min_max(p_df)[1],
+                                                                            handleLabel={"showCurrentValue": True,"label": "Year"},
+                                                                            value=2020,)],width=4)
+                         ])
+         ])
+       
+      
+       
+      
+        
         ,html.Div([
-        dbc.Row(
-            [
-            dbc.Col(dcc.Graph(id='example-graph564364',figure=get_figs(p_df)[1]),width=6),
-            dbc.Col(dcc.Graph(id='example-graph34344',figure=get_figs(p_df)[2]),width=6)
-           ] 
-        )
+                    dbc.Row([
+                        dbc.Col(dcc.Graph(id='example-graph564364',figure=get_figs(p_df)[1])),
+                        dbc.Col(dcc.Graph(id='example-graph34344',figure=get_figs(p_df)[2]))
+                       ])
         ])
-        ,dcc.Graph(
-         id='example-graph',
-         figure=get_figs(p_df)[0]
-         )
-        ,dcc.Graph(
-         id='example-graph4',
-         figure=px.line(ohlc_all_tickers_df, x='date', y="1. open",color = 'Ticker')
-         ),
+        
+        ,html.Div([
+                    dbc.Row([
+                        dbc.Col(dcc.Graph(id='example-graph',figure=get_figs(p_df)[0]),width=6),
+                        dbc.Col(dcc.Graph( id='example-graph4',figure=px.line(ohlc_all_tickers_df, x='date', y="1. open",color = 'Ticker')),width=6)
+                        ])
+        ])
+         
         
    
  
