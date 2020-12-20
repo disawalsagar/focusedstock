@@ -85,25 +85,31 @@ def get_figs(p_df):
          , title='Individual Stock vs Index'
          ,barmode='group'
          )
+    fig_bar_snp_diff.update_layout(
+        plot_bgcolor ='#e6ffe6'
+        )
     fig_sunburst_mc =px.sunburst(
         p_df,
         path = ['marketcap','Stocks'],
         names='Stocks',
-        #parents='marketcap',
         values='total_val'
     )
     fig_sunburst_sector =px.sunburst(
         p_df,
         path = ['Sector', 'Stocks'],
         names='Stocks',
-        #parents='marketcap',
         values='total_val'
     )
     fig_treemap_portfolio = px.treemap(
         p_df, 
         path=['Stocks'], 
         values='total_val'
+        
         )
+    fig_treemap_portfolio.update_layout(
+        plot_bgcolor ='red'
+        )
+    
     return (fig_bar_snp_diff,fig_sunburst_mc,fig_sunburst_sector,fig_treemap_portfolio)
 
 
@@ -119,6 +125,12 @@ def update_output(list_of_contents, list_of_names, list_of_dates):
             zip(list_of_contents, list_of_names, list_of_dates)]
         return children
 
+style={
+                'width': '25%',
+                'borderWidth': '1px',
+                'textAlign': 'center',
+                'margin': '10px'
+            },
 
 app.layout = html.Div([
 html.Div(
@@ -147,32 +159,45 @@ html.Div(
       ,dbc.Container([
           
                   dbc.Row([
-                       dbc.Col(dcc.Graph(id='example-graph1',figure=get_figs(p_df)[3]),width=8,style={ "border-style": "solid"}),
+                       dbc.Col(dcc.Graph(id='example-graph1',figure=get_figs(p_df)[3]),width=8),
                        dbc.Col([dcc.Graph(id='example-graph2'),daq.Slider(id='my-slider',
                                                                            min=get_min_max(p_df)[0],
                                                                             max=get_min_max(p_df)[1],
                                                                             handleLabel={"showCurrentValue": True,"label": "Year"},
-                                                                            value=2020,)],width=4,style={ "border-style": "solid"})
-                         ],style={ "border-style": "solid"})
-         
-       
-      
+                                                                            value=2020,)],width=4)
+                         ],no_gutters=True,style={ "border-style": "hidden"})
        
                     ,dbc.Row([
                         dbc.Col(dcc.Graph(id='example-graph564364',figure=get_figs(p_df)[1])),
-                        dbc.Col(dcc.Graph(id='example-graph34344',figure=get_figs(p_df)[2]),style={ "border-style": "solid"})
-                       ],no_gutters=True,style={ "border-style": "solid"})
-        
-        
+                        dbc.Col(dcc.Graph(id='example-graph34344',figure=get_figs(p_df)[2]))
+                       ],no_gutters=True,style={ "border-style": "hidden"})
         
                     ,dbc.Row([
-                        dbc.Col(dcc.Graph(id='example-graph',figure=get_figs(p_df)[0]),width=6,style={ "border-style": "solid"}),
+                        dbc.Col(dcc.Graph(id='example-graph',figure=get_figs(p_df)[0]),width=6),
                         dbc.Col(dcc.Graph( id='example-graph4',figure=px.line(ohlc_all_tickers_df, x='date', y="1. open",color = 'Ticker')),
-                                width=6,style={ "border-style": "solid"})
-                        ],style={ "border-style": "solid"})
+                                width=6)
+                        ],no_gutters=True,style={ "border-style": "hidden"})
        
          
-        ],style={ "border-style": "solid"})
+        ],style={ "border-style": "groove"})
+      
+      ,dbc.Card(
+    [
+        dbc.CardImg(src="/static/images/placeholder286x180.png", top=True),
+        dbc.CardBody(
+            [
+                html.H4("Card title", className="card-title"),
+                html.P(
+                    "Some quick example text to build on the card title and "
+                    "make up the bulk of the card's content.",
+                    className="card-text",
+                ),
+                dbc.Button("Go somewhere", color="primary"),
+            ]
+        ),
+    ],
+    style={"width": "18rem"},
+)
    
  
          
