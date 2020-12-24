@@ -12,6 +12,14 @@ from dash.dependencies import Input, Output
 from snp_diff import get_df_with_mc
 import dash_daq as daq
 import dash_bootstrap_components as dbc
+import plotly.io as pio
+
+pio.templates.default = "simple_white"
+
+px.defaults.template = "plotly_dark"
+px.defaults.color_continuous_scale = px.colors.sequential.Blackbody
+px.defaults.width = 400
+px.defaults.height = 300
 
 
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
@@ -88,39 +96,41 @@ app.layout = html.Div([
                                                                             handleLabel={"showCurrentValue": True,"label": "Year"},
                                                                             value=2020,)],width=4)
                          ],no_gutters=False,style={ "border-style": "hidden"})
-       
+                    
+                   ,html.Br()
+                    
                     ,dbc.Row([
-                        dbc.Col(dcc.Graph(id='example-graph564364',figure=get_figs(p_df)[1])),
-                        dbc.Col(dcc.Graph(id='example-graph34344',figure=get_figs(p_df)[2]))
-                       ],no_gutters=True,style={ "border-style": "hidden"})
+                        dbc.Col(
+                            dbc.Card([
+                                 dbc.CardHeader("Market-Cap Dividation"),
+                                 dbc.CardBody([dcc.Graph(id='example-graph564364',figure=get_figs(p_df)[1]),]),
+                                  ],outline=True) ,width=5)
+                        ,dbc.Col(
+                            dbc.Card([
+                                 dbc.CardHeader("Sector Dividation"),
+                                 dbc.CardBody([dcc.Graph(id='example-graph34344',figure=get_figs(p_df)[2]),]),
+                                 ],outline=True) ,width=7)
+                       ],no_gutters=False,style={ "border-style": "hidden"})
         
-                    ,dbc.Row([
-                        dbc.Col(dcc.Graph(id='example-graph',figure=get_figs(p_df)[0]),width=6),
-                        dbc.Col(dcc.Graph( id='example-graph4',figure=px.line(ohlc_all_tickers_df, x='date', y="1. open",color = 'Ticker')),
-                                width=6)
-                        ],no_gutters=False,style={ "border-style": "hidden"})
                     ,html.Br()
-                      ,dbc.Row([ 
+                    
+                    ,dbc.Row([ 
                           dbc.Col(
                              dbc.Card([
-                                 dbc.CardBody(
-                                    [
-                                         html.H5("Stocks Distributed in the Portfolio", className="card-title")
-                                        ,dcc.Graph( id='example-graph4345634343453453535',figure=px.line(ohlc_all_tickers_df, x='date', y="1. open",color = 'Ticker')),
-                                        
-                                    ]),
-                                 ],outline=True)
-                             ,width=6)
+                                 dbc.CardHeader("Individial Stocks vs S&P 500"),
+                                 dbc.CardBody([dcc.Graph(id='example-graph',figure=get_figs(p_df)[0]),]),
+                                 ],outline=True) ,width=5)
                          ,dbc.Col(
                              dbc.Card([
                              dbc.CardHeader("Stocks Distributed in the Portfolio"),
                              dbc.CardBody(
-                                [
-                                    dcc.Graph( id='example-graph4345653535',figure=px.line(ohlc_all_tickers_df, x='date', y="1. open",color = 'Ticker', template="plotly_dark")),
-                                    
-                                ]),
-                             ], color="secondary", inverse=True)
-                              ,width=6)
+                                [dcc.Graph( id='example-graph4345653535',
+                                           figure=px.line(ohlc_all_tickers_df, x='date', 
+                                                          y="1. open",color = 'Ticker', 
+                                                          width=400,height=300,line_shape='vhv' ,
+                                                          template="plotly_dark")),], style={ "justify":"center", "align":"center", "margin-left": "auto",
+    "margin-right": "auto"},),
+                             ], color="secondary", inverse=True),width=5,)
                       ],no_gutters=False,style={ "border-style": "dash"})
          
         ],style={ "border-style": "groove", "width":"99%","background-color":"#d5e6ca"}, fluid =True)
