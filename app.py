@@ -16,7 +16,7 @@ import plotly.io as pio
 
 pio.templates.default = "simple_white"
 
-px.defaults.template = "plotly_dark"
+px.defaults.template = "plotly_white"
 px.defaults.color_continuous_scale = px.colors.sequential.Blackbody
 px.defaults.width = 400
 px.defaults.height = 300
@@ -35,6 +35,8 @@ ohlc_all_tickers_df.rename(columns= {'4. close' : 'close'},inplace = True)
 def get_min_max(p_df):
     return (p_df.year.min(), p_df.year.max()) 
 
+style1={ "justify":"center", "align":"center", "margin-left": "auto",
+    "margin-right": "auto"}
 
 @app.callback(
     Output(component_id='example-graph2', component_property='figure'),
@@ -46,7 +48,7 @@ def get_pie(value=2020):
     fig = px.pie(p_df_1, values='total_val',
                  names='Stocks',
                  hole = 0.3,
-                 title='Portfolio Distribution', template="plotly_dark")
+                 title='Portfolio Distribution')
     return fig
 
 def get_figs(p_df):
@@ -89,27 +91,36 @@ app.layout = html.Div([
       dbc.Container([
           
                   dbc.Row([
-                       dbc.Col(dcc.Graph(id='example-graph1',figure=get_figs(p_df)[3]),width=8),
-                       dbc.Col([dcc.Graph(id='example-graph2'),daq.Slider(id='my-slider',
+                        dbc.Col(
+                            dbc.Card([
+                                 dbc.CardHeader("Market-Cap Dividation"),
+                                 dbc.CardBody([dcc.Graph(id='example-graph1',figure=get_figs(p_df)[3]),]),
+                                  ], color="light"),width={ "order":3, "offset" : 3},)
+                       , dbc.Col(
+                            dbc.Card([
+                                 dbc.CardHeader("Market-Cap Dividation"),
+                                 dbc.CardBody([dcc.Graph(id='example-graph2'), daq.Slider(id='my-slider',
                                                                            min=get_min_max(p_df)[0],
                                                                             max=get_min_max(p_df)[1],
                                                                             handleLabel={"showCurrentValue": True,"label": "Year"},
-                                                                            value=2020,)],width=4)
+                                                                            value=2020,)]),
+                                  ], color="light"),width={ "offset": 1,"order":"last"})
                          ],no_gutters=False,style={ "border-style": "hidden"})
                     
-                   ,html.Br()
+                   
+                    ,html.Br()
                     
                     ,dbc.Row([
                         dbc.Col(
                             dbc.Card([
                                  dbc.CardHeader("Market-Cap Dividation"),
                                  dbc.CardBody([dcc.Graph(id='example-graph564364',figure=get_figs(p_df)[1]),]),
-                                  ],outline=True) ,width=5)
+                                  ], color="light", ),width=5,)
                         ,dbc.Col(
                             dbc.Card([
                                  dbc.CardHeader("Sector Dividation"),
                                  dbc.CardBody([dcc.Graph(id='example-graph34344',figure=get_figs(p_df)[2]),]),
-                                 ],outline=True) ,width=7)
+                                 ], color="light", ),width=5,)
                        ],no_gutters=False,style={ "border-style": "hidden"})
         
                     ,html.Br()
@@ -119,7 +130,7 @@ app.layout = html.Div([
                              dbc.Card([
                                  dbc.CardHeader("Individial Stocks vs S&P 500"),
                                  dbc.CardBody([dcc.Graph(id='example-graph',figure=get_figs(p_df)[0]),]),
-                                 ],outline=True) ,width=5)
+                                 ], color="light",),width=5,)
                          ,dbc.Col(
                              dbc.Card([
                              dbc.CardHeader("Stocks Distributed in the Portfolio"),
@@ -128,9 +139,8 @@ app.layout = html.Div([
                                            figure=px.line(ohlc_all_tickers_df, x='date', 
                                                           y="1. open",color = 'Ticker', 
                                                           width=400,height=300,line_shape='vhv' ,
-                                                          template="plotly_dark")),], style={ "justify":"center", "align":"center", "margin-left": "auto",
-    "margin-right": "auto"},),
-                             ], color="secondary", inverse=True),width=5,)
+                                                         )),], style=style1,),
+                             ], color="light"),width=5,)
                       ],no_gutters=False,style={ "border-style": "dash"})
          
         ],style={ "border-style": "groove", "width":"99%","background-color":"#d5e6ca"}, fluid =True)
