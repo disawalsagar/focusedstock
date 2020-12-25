@@ -115,7 +115,7 @@ app.layout = html.Div([
                             dbc.Card([
                                  dbc.CardHeader("Market-Cap Dividation"),
                                  dbc.CardBody([dcc.Graph(id='example-graph564364',figure=get_figs(p_df)[1]),]),
-                                  ], color="light", ),width=5,)
+                                  ], color="light", ),width=5, )
                         ,dbc.Col(
                             dbc.Card([
                                  dbc.CardHeader("Sector Dividation"),
