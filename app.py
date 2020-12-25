@@ -18,8 +18,7 @@ pio.templates.default = "simple_white"
 
 px.defaults.template = "plotly_white"
 px.defaults.color_continuous_scale = px.colors.sequential.Blackbody
-px.defaults.width = 400
-px.defaults.height = 300
+
 
 
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
@@ -35,21 +34,10 @@ ohlc_all_tickers_df.rename(columns= {'4. close' : 'close'},inplace = True)
 def get_min_max(p_df):
     return (p_df.year.min(), p_df.year.max()) 
 
-style1={ "justify":"center", "align":"center", "margin-left": "auto",
-    "margin-right": "auto"}
+style1={ "justify":"center","margin-left": "2px",
+    "margin-right": "2px"}
 
-@app.callback(
-    Output(component_id='example-graph2', component_property='figure'),
-    Input(component_id='my-slider', component_property='value'))
 
-def get_pie(value=2020):
-    p_df['year']= p_df['year'].astype('int64') 
-    p_df_1=p_df[p_df['year'] <= value]
-    fig = px.pie(p_df_1, values='total_val',
-                 names='Stocks',
-                 hole = 0.3,
-                 title='Portfolio Distribution')
-    return fig
 
 def get_figs(p_df):
     fig_bar_snp_diff = px.bar(p_df
@@ -63,7 +51,7 @@ def get_figs(p_df):
         )
     fig_sunburst_mc =px.sunburst(
         p_df,
-        path = ['marketcap','Stocks'],
+        path = ['marketcap','Sector','Stocks'],
         names='Stocks',
         values='total_val'
     )
@@ -76,7 +64,7 @@ def get_figs(p_df):
     fig_treemap_portfolio = px.treemap(
         p_df, 
         path=['Stocks'], 
-        values='total_val'
+        values='total_val',
         
         )
     fig_treemap_portfolio.update_layout(
@@ -87,50 +75,33 @@ def get_figs(p_df):
             
 
 app.layout = html.Div([
+    
+    
 
       dbc.Container([
-          
+              
                   dbc.Row([
                         dbc.Col(
                             dbc.Card([
-                                 dbc.CardHeader("Market-Cap Dividation"),
+                                 dbc.CardHeader("Portfolio heat map", style={"border-color": "black"}),
                                  dbc.CardBody([dcc.Graph(id='example-graph1',figure=get_figs(p_df)[3]),]),
-                                  ], color="light"),width={ "order":3, "offset" : 3},)
-                       , dbc.Col(
-                            dbc.Card([
-                                 dbc.CardHeader("Market-Cap Dividation"),
-                                 dbc.CardBody([dcc.Graph(id='example-graph2'), daq.Slider(id='my-slider',
-                                                                           min=get_min_max(p_df)[0],
-                                                                            max=get_min_max(p_df)[1],
-                                                                            handleLabel={"showCurrentValue": True,"label": "Year"},
-                                                                            value=2020,)]),
-                                  ], color="light"),width={ "offset": 1,"order":"last"})
-                         ],no_gutters=False,style={ "border-style": "hidden"})
-                    
-                   
-                    ,html.Br()
-                    
-                    ,dbc.Row([
-                        dbc.Col(
-                            dbc.Card([
-                                 dbc.CardHeader("Market-Cap Dividation"),
-                                 dbc.CardBody([dcc.Graph(id='example-graph564364',figure=get_figs(p_df)[1]),]),
-                                  ], color="light", ),width=5, )
+                                  ],color="dark", outline=True),width={   "size" :6  },)
                         ,dbc.Col(
                             dbc.Card([
-                                 dbc.CardHeader("Sector Dividation"),
-                                 dbc.CardBody([dcc.Graph(id='example-graph34344',figure=get_figs(p_df)[2]),]),
-                                 ], color="light", ),width=5,)
-                       ],no_gutters=False,style={ "border-style": "hidden"})
-        
-                    ,html.Br()
+                                 dbc.CardHeader("Market-Cap & Sector wise breakup"),
+                                 dbc.CardBody([dcc.Graph(id='example-graph564364',figure=get_figs(p_df)[1]),], style=style1,),
+                                  ], color="dark", outline=True ),width={   "size" :6  }, )
+                       
+                         ],no_gutters=False,style={ "border-style": "dash"})
                     
+                    ,html.Br()
+                                        
                     ,dbc.Row([ 
                           dbc.Col(
                              dbc.Card([
                                  dbc.CardHeader("Individial Stocks vs S&P 500"),
                                  dbc.CardBody([dcc.Graph(id='example-graph',figure=get_figs(p_df)[0]),]),
-                                 ], color="light",),width=5,)
+                                 ], color="dark", outline=True),width=5,)
                          ,dbc.Col(
                              dbc.Card([
                              dbc.CardHeader("Stocks Distributed in the Portfolio"),
@@ -140,10 +111,10 @@ app.layout = html.Div([
                                                           y="1. open",color = 'Ticker', 
                                                           width=400,height=300,line_shape='vhv' ,
                                                          )),], style=style1,),
-                             ], color="light"),width=5,)
+                             ],color="dark", outline=True),width=5,)
                       ],no_gutters=False,style={ "border-style": "dash"})
          
-        ],style={ "border-style": "groove", "width":"99%","background-color":"#d5e6ca"}, fluid =True)
+        ],style={ "border-style": "groove", "width":"99%","background-color":"white"}, fluid =True)
     
    
 ])
