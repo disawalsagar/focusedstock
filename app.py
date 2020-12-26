@@ -16,7 +16,7 @@ import plotly.io as pio
 
 pio.templates.default = "simple_white"
 
-px.defaults.template = "plotly_dark"
+px.defaults.template = "ggplot2"
 px.defaults.color_continuous_scale = px.colors.sequential.Blackbody
 px.defaults.width = 500
 px.defaults.height = 275
@@ -99,7 +99,7 @@ app.layout = html.Div([
                                  dbc.CardBody([dcc.Graph(id='example-graph564364',figure=get_figs(p_df)[1], config= {'displayModeBar' : False}),], style=style1,),
                                   ], color="dark", outline=True ),width={"size" :5}, )
                        
-                         ],no_gutters=False,style={ "border-style": "dash"},justify="end",)
+                         ],no_gutters=False,style= { "border-style": "dash"},justify="end",)
                     
                     ,html.Br()
                                         
