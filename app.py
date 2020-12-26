@@ -58,7 +58,7 @@ def get_figs(p_df):
        # plot_bgcolor ='#e6ffe6',
          margin=margin1
         )
-    fig_sunburst_mc =px.sunburst(
+    fig_sunburst_mc = px.sunburst(
         p_df,
         path = ['marketcap','Sector','Stocks'],
         names='Stocks',
