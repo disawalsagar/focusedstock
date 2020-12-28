@@ -47,6 +47,17 @@ margin1 = dict(
         t=1,
         pad=1)
 
+style2= {
+                'width': '100%',
+                'height': '60px',
+                'lineHeight': '60px',
+                'borderWidth': '1px',
+                'borderStyle': 'dashed',
+                'borderRadius': '5px',
+                'textAlign': 'center',
+                'margin': '10px'
+            },
+
 def get_figs(p_df):
     fig_bar_snp_diff = px.bar(p_df
          ,x = 'Symbol'
@@ -84,9 +95,17 @@ def get_figs(p_df):
 
 app.layout = html.Div([
     
-    
-
-      dbc.Container([
+    html.Div(
+        dcc.Upload(
+            id='upload-data',
+            children=html.Div([
+                'Drag and Drop or ',
+                html.A('Select Files')
+            ]),
+            , multiple=True
+        ),
+ )
+      ,dbc.Container([
                   dbc.Row([
                         dbc.Col(
                             dbc.Card([
