@@ -39,7 +39,7 @@ def get_min_max(p_df):
     return (p_df.year.min(), p_df.year.max()) 
 
 
-style2= {
+style2= {       'top':'50%',
                 'width': '75%',
                 'height': '60px',
                 'lineHeight': '60px',
@@ -51,7 +51,10 @@ style2= {
                 'justify':'center',
                 'align-content': 'center'
             }
-
+style3= {
+                'width': '25%',
+                'margin': 'auto',
+            }
 style1={ 
        # "margin-left": "auto",
     #"margin-right": "auto", 
@@ -105,14 +108,48 @@ def update_output(list_of_contents, list_of_names, list_of_dates):
                              ],color="dark", outline=True),width=5,)
                       ],no_gutters=False,style={ "border-style": "dash"},justify="center",)
          
-        ], style={ "border-style": "groove", "width":"99%","background-color":"white"}, fluid =True)
+        ], style={ "border-style": "groove",
+                  "width":"auto",
+                  "background-color":"white"}, fluid =True)
     
    ]
-app.layout = html.Div( [html.Div(
-        dcc.Upload(id='upload-data',children=html.Div(['Drag and Drop or ', html.A('Select your portfolio')]),style=style2, multiple=False),
-       style= {'align-content': 'center', 'justify': 'center'}),
+table_header = [
+    html.Thead(html.Tr([ html.Th('Symbol', style={'fontSize':20, 'font-family':'sans-serif'} ),html.Th('Quantity'),html.Th('Bought Price'),html.Th('Date')]))
+]                      
+sample_row = html.Tr([html.Td("Dis"), html.Td("10"), html.Td("100"), html.Td("2018-08-06")])
+table_body = [html.Tbody([sample_row])]
+table_caption = [html.Caption("Sample format for the file")]
+
+app.layout = html.Div([
     
-    html.Div(id='output-data-upload'),
+    html.Div(
+        [
+     html.Div(dcc.Markdown('''
+                  Welcome! Visualize your portfolio now!
+                  Upload your portfolio file using the format described and get started
+                  ''' , style={'padding':'5px','height':'auto'}), style={'position': 'relative',
+                                                                      'top': '25px', 'height':'auto'})
+    ,html.Br()
+    
+    ,html.Div(id='portfolio file description', children=dbc.Table(table_caption + table_header + table_body , bordered=True,style={
+                'width': '95%',
+                'height':'10px',
+                #'border':'1px solid green',
+                #'margin': 'auto',
+                #'padding':'2px',
+                'table-layout': 'fixed'
+            },
+        className="table table-sm"
+        ), style={'position': 'relative','top': '25px','height':'auto','border':'1px solid red'})
+    
+    ,html.Br()
+    
+    ,html.Div(
+        dcc.Upload(id='upload-data',children=html.Div(['Drag and Drop or ', html.A('Select your portfolio file')]),style=style2, multiple=False),
+       style= {'top': '30px' , 'position': 'relative'})
+    ], style={'border':'1px solid blue','float':'left', 'width':'15%', 'height': '700px', 'margin':'5px'})
+    
+    ,html.Div(id='output-data-upload', style={'border':'1px solid red','float':'right', 'width':'84%','height': 'auto'})
     ])
 
 if __name__ == '__main__':
