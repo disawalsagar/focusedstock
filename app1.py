@@ -62,20 +62,17 @@ style1={
     #"margin-right": "auto", 
     "margin":"auto","height":300, "justify-content": "center"}
 
-@app.callback(Output('output-data-upload', 'children'),
-              Input('upload-data', 'contents'),
-              State('upload-data', 'filename'),
-              State('upload-data', 'last_modified'))
-def update_output(list_of_contents, list_of_names, list_of_dates):
-    if list_of_contents is not None:
-        list_of_contents_type, list_of_contents_string = list_of_contents.split(',')
-        decoded = base64.b64decode(list_of_contents_string)
-        df = pd.read_csv(io.StringIO(decoded.decode('utf-8')),parse_dates=['Date'])
-        #p_df = get_df_with_mc(df)
-        p_df=sl.get_snp_list()
-        return [   
-    
-     dbc.Container([
+p_df=sl.get_snp_list()
+
+table_header = [
+    html.Thead(html.Tr([ html.Th('Symbol' ),html.Th('Quantity'),html.Th('Bought Price'),html.Th('Date')]))
+]                      
+sample_row = html.Tr([html.Td("Dis"), html.Td("10"), html.Td("100"), html.Td("2018-08-06")])
+table_body = [html.Tbody([sample_row])]
+table_caption = [html.Caption("Sample format for the file")]
+
+app.layout = html.Div([
+    dbc.Container([
                   dbc.Row([
                         dbc.Col(
                             dbc.Card([
@@ -121,60 +118,6 @@ def update_output(list_of_contents, list_of_names, list_of_dates):
         ], style={ "border-style": "hidden",
                   "width":"auto",
                   "background-color":"white"}, fluid =True)
-    
-   ]
-table_header = [
-    html.Thead(html.Tr([ html.Th('Symbol' ),html.Th('Quantity'),html.Th('Bought Price'),html.Th('Date')]))
-]                      
-sample_row = html.Tr([html.Td("Dis"), html.Td("10"), html.Td("100"), html.Td("2018-08-06")])
-table_body = [html.Tbody([sample_row])]
-table_caption = [html.Caption("Sample format for the file")]
-
-app.layout = html.Div([
-    
-    html.Div(
-        [
-     html.Div(dcc.Markdown('''
-                  Welcome! Visualize your portfolio now!
-                  Upload your portfolio file using the format described below and get started. Use this tool to analyze your portfolio. 
-                  ''' , style={'padding':'5px','height':'auto'}), style={'position': 'relative',
-                                                                      'top': '45px', 'height':'auto'})
-    ,html.Br()
-    
-    ,html.Div(id='portfolio file description', children=dbc.Table(table_caption + table_header + table_body , bordered=True,style={
-                'width': '95%',
-                'height':'10px',
-                'border':'1px solid green',
-                'margin': 'auto',
-                'padding':'2px',
-                'table-layout': 'fixed'
-                ,'fontSize':10, 'font-family':'sans-serif'
-            },
-        className="table table-sm"
-        ), style={'position': 'relative','top': '45px','height':'auto',
-                  #'border':'1px solid red'
-                  })
-    
-    ,html.Br()
-    
-    ,html.Div(
-        dcc.Upload(id='upload-data',children=html.Div(['Drag and Drop or ', html.A('Select your portfolio file')]),
-                   #style=style2, 
-                   multiple=False),
-       style= {'top': '20%' , 'position': 'relative',
-               #'border':'1px solid red'
-                'borderStyle': 'dashed',
-                'width':'95%',
-                'borderWidth': '1px',
-                'borderStyle': 'dashed',
-                'borderRadius': '5px',
-                'textAlign': 'center',
-                'margin': 'auto',
-               }
-       )
-    ], style={'border':'1px solid black','float':'left', 'width':'14%', 'height': '700px', 'margin':'5px'})
-    
-    ,html.Div(id='output-data-upload', style={'border':'1px solid black','float':'right', 'min-height': '725px', 'width':'84%','height': 'auto','margin':'1px'})
     ])
 
 

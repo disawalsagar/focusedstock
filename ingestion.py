@@ -7,6 +7,7 @@ from alpha_vantage.fundamentaldata  import FundamentalData
 from alpha_vantage.timeseries  import TimeSeries 
 import pandas as pd
 import time
+import snp_list as sl
 #%%Read portfolio file
 portfolio_df = pd.read_csv(r'C:\Users\sdisawal\python_projects\focusedstock\rbh.csv', 
                            parse_dates=['Date'])
@@ -46,3 +47,18 @@ portfolio_df = pd.read_csv(r'C:\Users\sdisawal\python_projects\focusedstock\rbh.
 portfolio_df = portfolio_df[['Stocks', 'Symbol', 'Quantity','Bought Price','Date']]
 portfolio_df.rename(columns = {'Date': 'bought_date'},inplace = True)
 portfolio_df.replace(to_replace='CGX', value='CGC', inplace=True)
+
+#%%
+snp_list =sl.get_snp_list()
+tickers = set((snp_list["Symbol"]).to_list())
+ohlc_all_tickers_df=pd.DataFrame()
+i = 1
+for ticker in tickers:
+        print("Getting values for {}, {}".format(i, ticker))
+        if i == 5:
+            time.sleep(60) 
+            i = 0
+        data, metadata = ts.get_daily(symbol=ticker, outputsize='full')
+        data['Ticker'] = ticker
+        ohlc_all_tickers_df  = ohlc_all_tickers_df.append(data)
+        i= i+1

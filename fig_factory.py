@@ -17,26 +17,43 @@ px.defaults.height = 275
 
 margin1 = dict( l=1,r=1, b=10,t=1,pad=1)
 
-def get_fig_bar_snp_diff(p_df):
-    fig_bar_snp_diff = px.bar(p_df
-         ,x = 'Symbol'
-         ,y = ['S&P', 'Your Stocks']
-         , title='Individual Stock vs Index'
-         ,barmode='group'
-         )
+def get_fig_bar_snp_diff(p_df, sp=True):
+    if sp:
+        fig_bar_snp_diff = px.bar(p_df
+             ,x = 'Symbol'
+             ,y = ['S&P', 'Your Stocks']
+             , title='Individual Stock vs Index'
+             ,barmode='group'
+             )
+    else: 
+        fig_bar_snp_diff = px.bar(p_df
+             ,x = 'Symbol'
+             ,y = ['S&P', 'Your Stocks']
+             , title='Individual Stock vs Index'
+             ,barmode='group'
+             )
     fig_bar_snp_diff.update_layout(
        # plot_bgcolor ='#e6ffe6',
          margin=margin1
         )
     return fig_bar_snp_diff
     
-def get_fig_sunburst_mc(p_df):
-    fig_sunburst_mc = px.sunburst(
+def get_fig_sunburst_mc(p_df, sp=True):
+    
+    if sp:
+         fig_sunburst_mc = px.sunburst(
             p_df,
             path = ['marketcap','Sector','Stocks'],
             names='Stocks',
             values='total_val'
         )
+    else:    
+        fig_sunburst_mc = px.sunburst(
+                p_df,
+                path = ['marketcap','Sector','Stocks'],
+                names='Stocks',
+                values='total_val'
+            )
     fig_sunburst_mc.update_layout(
             margin=margin1
         )
