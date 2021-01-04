@@ -11,8 +11,8 @@ import plotly.express as px
 
 px.defaults.template = "ggplot2"
 px.defaults.color_continuous_scale = px.colors.sequential.Blackbody
-px.defaults.width = 500
-px.defaults.height = 275
+#px.defaults.width = 500
+#px.defaults.height = 275
 
 
 margin1 = dict( l=1,r=1, b=10,t=1,pad=1)
@@ -43,9 +43,9 @@ def get_fig_sunburst_mc(p_df, sp=True):
     if sp:
          fig_sunburst_mc = px.sunburst(
             p_df,
-            path = ['marketcap','Sector','Stocks'],
-            names='Stocks',
-            values='total_val'
+            path = ['Sector','Symbol'],
+            names='Symbol',
+            values='Market Cap'
         )
     else:    
         fig_sunburst_mc = px.sunburst(
@@ -59,13 +59,20 @@ def get_fig_sunburst_mc(p_df, sp=True):
         )
     return fig_sunburst_mc
 
-def get_fig_treemap_portfolio(p_df):
-    fig_treemap_portfolio = px.treemap(
-        p_df, 
-        path=['Stocks'], 
-        values='total_val',
-        
-        )
+def get_fig_treemap_portfolio(p_df, sp=True):
+    
+    if sp:
+        fig_treemap_portfolio = px.treemap(
+            p_df, 
+            path=['Market Cap','Symbol'], 
+            values='Market Cap',
+            )
+    else:
+        fig_treemap_portfolio = px.treemap(
+            p_df, 
+            path=['Stocks'], 
+            values='total_val',
+            )
     
     fig_treemap_portfolio.update_layout(
         margin=margin1
