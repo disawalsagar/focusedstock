@@ -64,7 +64,7 @@ def get_fig_treemap_portfolio(p_df, sp=True):
     if sp:
         fig_treemap_portfolio = px.treemap(
             p_df, 
-            path=['Market Cap','Symbol'], 
+            path=['marketcap','Symbol'], 
             values='Market Cap',
             )
     else:

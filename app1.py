@@ -24,7 +24,7 @@ px.defaults.color_continuous_scale = px.colors.sequential.Blackbody
 
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 
-p_df=sl.get_snp_list()
+p_df=sl.get_prepare_index_data()
 
 
 

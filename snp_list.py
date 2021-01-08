@@ -11,7 +11,8 @@ import datapackage
 import numpy as np
 
 class Prepare_snp_data:
-    def __init__(self):
+    
+    def __new__(cls):
         data_url = 'https://datahub.io/core/s-and-p-500-companies-financials/datapackage.json'
         package = datapackage.Package(data_url)
         resources = package.resources
@@ -33,8 +34,9 @@ def cal_marketcap(market_cap):
         mc='NA'
     return mc
 
-
+#%%
 def get_prepare_index_data():
-    get_df = Prepare_snp_data()
-    
+    df = Prepare_snp_data()
+    df['marketcap']=df['Market Cap'].apply(cal_marketcap)  
+    return df     
     
