@@ -32,7 +32,7 @@ app.layout = html.Div([
     html.Div(
     dcc.Graph(id='fig_treemap_portfolio',figure=ff.get_fig_treemap_portfolio(p_df), 
                                                          config= {'displayModeBar' : False}), 
-    style={'width':'95%','margin':'auto'}
+    style={'width':'95%','margin':'auto','height': '900px'}
     )
     ,dcc.Graph(id='fig_sunburst_mc',figure=ff.get_fig_sunburst_mc(p_df),
                                                          config= {'displayModeBar' : False})

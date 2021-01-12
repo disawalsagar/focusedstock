@@ -13,7 +13,7 @@ px.defaults.template = "ggplot2"
 px.defaults.color_continuous_scale = px.colors.sequential.Blackbody
 #px.defaults.width = 500
 #px.defaults.height = 275
-
+px.colors.sequential
 
 margin1 = dict( l=1,r=1, b=10,t=1,pad=1)
 
@@ -45,7 +45,7 @@ def get_fig_sunburst_mc(p_df, sp=True):
             p_df,
             path = ['Sector','Symbol'],
             names='Symbol',
-            values='Market Cap'
+           # values='Market Cap'
         )
     else:    
         fig_sunburst_mc = px.sunburst(
@@ -64,8 +64,11 @@ def get_fig_treemap_portfolio(p_df, sp=True):
     if sp:
         fig_treemap_portfolio = px.treemap(
             p_df, 
-            path=['marketcap','Symbol'], 
-            values='Market Cap',
+            path=['marketcap','Symbol'],
+            color='Market Cap',
+            color_continuous_scale=px.colors.sequential.BuGn,
+           # values='Market Cap',
+           height='750'
             )
     else:
         fig_treemap_portfolio = px.treemap(
