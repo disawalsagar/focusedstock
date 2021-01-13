@@ -66,9 +66,11 @@ def get_fig_treemap_portfolio(p_df, sp=True):
             p_df, 
             path=['marketcap','Symbol'],
             color='Market Cap',
-            color_continuous_scale=px.colors.sequential.BuGn,
+            color_continuous_scale=px.colors.sequential.Plotly3,
            # values='Market Cap',
-           height='750'
+           height=750
+           ,hover_name='Name'
+          ,hover_data={'Market Cap':'Market Cap'},
             )
     else:
         fig_treemap_portfolio = px.treemap(
