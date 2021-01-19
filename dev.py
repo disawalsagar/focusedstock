@@ -38,7 +38,7 @@ from datetime import datetime
 import numpy as np
 data = pd.read_html('https://en.wikipedia.org/wiki/List_of_S%26P_500_companies')
 snp_df=data[0]
-px.defaults.template = "ggplot2"
+#px.defaults.template = "ggplot2"
 
 #%%
 import datapackage

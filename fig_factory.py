@@ -69,11 +69,12 @@ def get_fig_treemap_portfolio(p_df, sp=True):
             color_continuous_scale=px.colors.sequential.Plotly3,
            # values='Market Cap',
            height=750
-           ,hover_name='Name'
-          ,hover_data={'Market Cap':'Market Cap'}
+           #,hover_name='Name'
+          #,hover_data={'Market Cap':'Market Cap'}
                        
             )
-        fig_treemap_portfolio.data[0].hovertemplate = 'Name=%{Name}<br>%{id}'
+        #fig_treemap_portfolio.data[0].hovertemplate = 'Name=%{Name}<br>%{id}'
+        fig_treemap_portfolio.update_traces(hovertemplate=None)
     else:
         fig_treemap_portfolio = px.treemap(
             p_df, 

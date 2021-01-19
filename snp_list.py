@@ -20,7 +20,19 @@ class Prepare_snp_data:
             if resource.tabular:
                 data = pd.read_csv(resource.descriptor['path'])
         return data
-        
+    
+    
+def dji_data(local=False):
+    if local:
+        data =pd.read_html('https://en.wikipedia.org/wiki/Dow_Jones_Industrial_Average')
+        dji=data[1]
+        #dji.to_csv(r'C:\Users\sdisawal\Desktop\Stocks\Code\csv\dji.csv', header=True, index=False)
+        dji['market_cap']='Large Cap'
+    else:
+        dji=pd.read_csv(r'C:\Users\sdisawal\Desktop\Stocks\Code\csv\dji.csv', usecols=['Company'])
+        dji['market_cap']='Large Cap'
+    return dji
+       
 
 def cal_marketcap(market_cap):
     
@@ -35,8 +47,7 @@ def cal_marketcap(market_cap):
     return mc
 
 #%%
-def get_prepare_index_data():
+def get_prepare_index_data(type):
     df = Prepare_snp_data()
     df['marketcap']=df['Market Cap'].apply(cal_marketcap)  
-    return df     
-    
+    return df         

@@ -26,13 +26,28 @@ app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 p_df=sl.get_prepare_index_data()
 
+@app.callback(
+    dash.dependencies.Output('dd-output-container', 'children'),
+    [dash.dependencies.Input('demo-dropdown', 'value')])
+def update_output(value):
+    return dcc.Graph(id='fig_treemap_portfolio',figure=ff.get_fig_treemap_portfolio(p_df),config= {'displayModeBar' : False})
 
 
 app.layout = html.Div([
-    html.Div(
-    dcc.Graph(id='fig_treemap_portfolio',figure=ff.get_fig_treemap_portfolio(p_df), 
-                                                         config= {'displayModeBar' : False}), 
-    style={'width':'95%','margin':'auto','height': '900px'}
+    html.Div([
+    dcc.Dropdown(
+        id='demo-dropdown',
+        options=[
+            {'label': 'S&P 500', 'value': 'SNP'},
+            {'label': 'Russell 1000', 'value': 'MTL'},
+            {'label': 'Dow Jon Industrial Average', 'value': 'SF'}
+        ],
+        value='SNP'
+    ),
+    
+], style={'width':'40%','margin':'auto'}),
+    html.Br()
+    ,html.Div(id='dd-output-container', style={'width':'95%','margin':'auto','height': '900px'}
     )
     ,dcc.Graph(id='fig_sunburst_mc',figure=ff.get_fig_sunburst_mc(p_df),
                                                          config= {'displayModeBar' : False})
