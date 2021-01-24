@@ -47,7 +47,7 @@ def cal_marketcap(market_cap):
     return mc
 
 #%%
-def get_prepare_index_data(type):
+def get_prepare_index_data():
     df = Prepare_snp_data()
     df['marketcap']=df['Market Cap'].apply(cal_marketcap)  
     return df         
