@@ -49,7 +49,7 @@ app.layout = html.Div([
     html.Br()
     ,html.Div(id='dd-output-container', style={'width':'95%','margin':'auto','height': '900px'}
     )
-    ,dcc.Graph(id='fig_sunburst_mc',figure=ff.get_fig_sunburst_mc(p_df),
+    ,dcc.Graph(id='fig_sunburst_mc', figure=ff.get_fig_sunburst_mc(p_df),
                                                          config= {'displayModeBar' : False})
   
     ])
